@@ -42,6 +42,7 @@ public class Login {
         emailTextF.setFont(new Font("Outfit", Font.ITALIC, 12));
         emailTextF.setOpaque(false);
         emailTextF.setBorder(new MatteBorder(0,0,1,0,Color.white));
+        emailTextF.setForeground(new Color(255,179,2));
         frame1.add(emailTextF);
 
         // modificar para agregar placeholder
@@ -51,7 +52,7 @@ public class Login {
             public void focusGained(FocusEvent e) {
                 if (emailTextF.getText().equals("Ingrese su nombre de usuario")) {
                     emailTextF.setText("");
-                    emailTextF.setForeground(Color.BLACK);
+                    emailTextF.setForeground(new Color(255,179,2));
                 }
 
             }
@@ -78,6 +79,7 @@ public class Login {
         passTxtF.setBounds(130, 160, 200, 30);
         passTxtF.setFont(new Font("Outfit", Font.ITALIC, 12));
         passTxtF.setOpaque(false);
+        passTxtF.setForeground(new Color(255,179,2));
         passTxtF.setBorder(new MatteBorder(0,0,1,0,Color.white));
         passTxtF.setEchoChar('*');
         frame1.add(passTxtF);
@@ -89,7 +91,7 @@ public class Login {
             public void focusGained(FocusEvent e) {
                 if (passTxtF.getText().equals("Contraseña")) {
                     passTxtF.setText("");
-                    passTxtF.setForeground(Color.BLACK);
+                    passTxtF.setForeground(new Color(255,179,2));
                 }
             }
 
@@ -116,45 +118,46 @@ public class Login {
         smtBt.setBackground(new Color(255, 179, 2));
         smtBt.setFont(new Font("Outfit SemiBold", Font.BOLD, 15));
 
-        smtBt.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame1.setVisible(false);
-                mainPage main = new mainPage();
-                main.setVisible(true);
-            }
-        });
+//        smtBt.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                frame1.setVisible(false);
+//                mainPage main = new mainPage();
+//                main.setVisible(true);
+//            }
+//        });
 
 
-        /*
-         * smtBt.addActionListener(new ActionListener() {
-         *
-         * @Override
-         * public void actionPerformed(ActionEvent e) {
-         * String email = emailTextF.getText();
-         * String emPtrn =
-         * "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-         * Pattern ptrn = Pattern.compile(emPtrn);
-         * Matcher mtch = ptrn.matcher(email);
-         *
-         * String password = new String(passTxtF.getPassword());
-         * String passPtrn =
-         * "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$@!%&*?])[A-Za-z\\d#$@!%&*?]{8,30}$";
-         * Pattern pttn = Pattern.compile(passPtrn);
-         * Matcher match = pttn.matcher(password);
-         * JOptionPane.showMessageDialog(null,mtch.matches());
-         * JOptionPane.showMessageDialog(null, match.matches());
-         * if (mtch.matches() && match.matches()){
-         * JOptionPane.showMessageDialog(null,"Hecho","éxito",
-         * JOptionPane.INFORMATION_MESSAGE);
-         * } else {
-         * JOptionPane.showMessageDialog(null, "Correo o contraseña inválidos",
-         * "Error",JOptionPane.ERROR_MESSAGE);
-         * }
-         *
-         * }
-         * });
-         */
+
+          smtBt.addActionListener(new ActionListener() {
+
+          @Override
+          public void actionPerformed(ActionEvent e) {
+          String email = emailTextF.getText();
+          String emPtrn =
+          "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+          Pattern ptrn = Pattern.compile(emPtrn);
+          Matcher mtch = ptrn.matcher(email);
+
+          String password = new String(passTxtF.getPassword());
+          String passPtrn =
+          "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$@!%&*?])[A-Za-z\\d#$@!%&*?]{8,30}$";
+          Pattern pttn = Pattern.compile(passPtrn);
+          Matcher match = pttn.matcher(password);
+//          JOptionPane.showMessageDialog(null,mtch.matches());
+//          JOptionPane.showMessageDialog(null, match.matches());
+          if (mtch.matches() && match.matches()){
+          JOptionPane.showMessageDialog(null,"Hecho","éxito",
+          JOptionPane.INFORMATION_MESSAGE);
+          new mainPage();
+          } else {
+          JOptionPane.showMessageDialog(null, "Correo o contraseña inválidos",
+          "Error",JOptionPane.ERROR_MESSAGE);
+          }
+
+          }
+          });
+
         frame1.add(smtBt);
 
         frame1.setVisible(true);
