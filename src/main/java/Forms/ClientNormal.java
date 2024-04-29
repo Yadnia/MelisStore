@@ -11,10 +11,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AdminNormal extends JFrame {
+public class ClientNormal extends JFrame {
 
-    public AdminNormal(){
-        setTitle("Administradores");
+    public ClientNormal(){
+        setTitle("Clientes");
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(new Dimension(screen.width-800, screen.height-100));
         setLocationRelativeTo(null);
@@ -30,7 +30,7 @@ public class AdminNormal extends JFrame {
         Color yell = new Color(255,179,2);
         Color dk = new Color(46, 21, 59);
 
-        JLabel title = new JLabel("Administradores del negocio");
+        JLabel title = new JLabel("Clientes del negocio");
         title.setForeground(yell);
         title.setFont(font20);
         title.setBounds(30,20,400,40);
@@ -63,7 +63,6 @@ public class AdminNormal extends JFrame {
         apetxt.setBounds(90,150, 200,30);
         apetxt.setForeground(yell);
         apetxt.setFont(font12);
-
         JTextField cedtxt = new JTextField();
         cedtxt.setOpaque(false);
         cedtxt.setBorder(new MatteBorder(0,0,1,0,yell));
@@ -72,15 +71,15 @@ public class AdminNormal extends JFrame {
         cedtxt.setFont(font12);
 
         JButton addBtt = new JButton("Agregar");
-        addBtt.setText("Agregar Administrador");
+        addBtt.setText("Agregar Cliente");
         addBtt.setOpaque(false);
         addBtt.setFont(font14);
         addBtt.setForeground(yell);
         addBtt.setBorder(new MatteBorder(1,1,1,1,Color.WHITE));
 //        addBtt.setPreferredSize(new Dimension(300,40));
-       addBtt.setBounds(300,100,200,40);
+        addBtt.setBounds(300,100,200,40);
         JButton delBtt = new JButton("Eliminar");
-        delBtt.setText("Eliminar Administrador");
+        delBtt.setText("Eliminar Cliente");
         delBtt.setOpaque(false);
         delBtt.setFont(font14);
         delBtt.setForeground(yell);
@@ -120,8 +119,8 @@ public class AdminNormal extends JFrame {
         delBtt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            int num = table1.getSelectedRow();
-            model1.removeRow(num);
+                int num = table1.getSelectedRow();
+                model1.removeRow(num);
             }
         });
 

@@ -1,7 +1,6 @@
 package windows;
 
-import Forms.Admin;
-import Forms.AdminNormal;
+import Forms.*;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -95,12 +94,6 @@ public class mainPage extends JFrame {
                 JOptionPane.showMessageDialog(null,"Buscar Cliente");
             }
         };
-        ActionListener prvSr = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null,"Buscar Proveedor");
-            }
-        };
         ActionListener pdSr = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -158,14 +151,32 @@ public class mainPage extends JFrame {
         sell.setBackground(new Color(46, 21, 59));
         sell.setForeground(Color.white);
         sell.addActionListener(sella);
+        sell.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new SellNormal();
+            }
+        });
         JMenuItem client = new JMenuItem("Clientes");
         client.setBackground(new Color(46, 21, 59));
         client.setForeground(Color.white);
         client.addActionListener(clienta);
-        JMenuItem prov = new JMenuItem("Proveedores");
+        client.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new ClientNormal();
+            }
+        });
+        JMenuItem prov = new JMenuItem("Productos");
         prov.setBackground(new Color(46, 21, 59));
         prov.setForeground(Color.white);
         prov.addActionListener(prova);
+        prov.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new ProductNormal();
+            }
+        });
 
         secMenu.add(admin);
         secMenu.add(sell);
@@ -183,17 +194,12 @@ public class mainPage extends JFrame {
         cSrc.setForeground(Color.white);
         cSrc.addActionListener(cliSr);
         cSrc.setBackground(new Color(46, 21, 59));
-        JMenuItem pSrc = new JMenuItem("Proveedor");
-        pSrc.setBackground(new Color(46, 21, 59));
-        pSrc.setForeground(Color.white);
-        pSrc.addActionListener(prvSr);
         JMenuItem pdRrc = new JMenuItem("Producto");
         pdRrc.setBackground(new Color(46, 21, 59));
         pdRrc.setForeground(Color.white);
         pdRrc.addActionListener(pdSr);
 
         search.add(cSrc);
-        search.add(pSrc);
         search.add(pdRrc);
         search.setPreferredSize(new Dimension(250,30));
 

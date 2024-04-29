@@ -16,11 +16,13 @@ public class TablePanel extends JPanel {
         DefaultTableModel model1 = new DefaultTableModel();
         model1.addColumn("Admins");
         model1.addColumn("Vendedores");
-        model1.addColumn("Proveedores");
+        model1.addColumn("Clientes");
         model1.addColumn("Productos");
 
 
-        model1.addRow(new Object[]{"Hola"});
+        model1.addRow(new Object[]{"Admin1","Vendedor1","Cliente1","Producto1"});
+        model1.addRow(new Object[]{"Admin2","Vendedroe2","Clientes2","Producto2"});
+
         JTable table1 = new JTable(model1);
         table1.setBackground(new Color(184, 172, 217));
         table1.setSelectionBackground(new Color(113,66,190,30));
