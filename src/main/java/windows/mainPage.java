@@ -1,25 +1,19 @@
 package windows;
 
-import com.sun.net.httpserver.HttpPrincipal;
-import com.sun.tools.javac.Main;
+import Forms.Admin;
+import Forms.AdminNormal;
 
-import javax.management.modelmbean.ModelMBeanAttributeInfo;
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import javax.swing.border.AbstractBorder;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.RoundRectangle2D;
 import java.net.URL;
-import java.security.Key;
 
 public class mainPage extends JFrame {
 
     JFrame mainFrame = new JFrame();
+    public static JDesktopPane desktopPane;
 
     public mainPage(){
 
@@ -33,12 +27,7 @@ public class mainPage extends JFrame {
         setResizable(true);
         getContentPane().setBackground(new Color(46, 21, 59));
         setLayout(null);
-        JDesktopPane desktopPane = new JDesktopPane();
-        Admin admin1 = new Admin();
-        add(desktopPane, BorderLayout.CENTER);
-        desktopPane.add(admin1);
-        admin1.setVisible(true);
-        admin1.pack();
+
         //titulo
         JLabel label1 = new JLabel();
         label1.setText("Bienvenido a Melis Store");
@@ -145,20 +134,25 @@ public class mainPage extends JFrame {
         JMenuItem admin = new JMenuItem("Administradores");
         admin.setBackground(new Color(46, 21, 59));
         admin.setForeground(Color.white);
-        admin.addActionListener(admina);
+        admin.addActionListener(admina); //-----------------------------------------------------------------------------------
         admin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                admin1.setVisible(true);
+               desktopPane = new JDesktopPane();
+               getContentPane().add(desktopPane);
+
+                AgregarAVentana(Admin.getInstancia());
+                setVisible(true);
+               new AdminNormal();
 
             }
-//            private void AgregarAVentana(JInternalFrame ventanaInterna){
-//                desktopPane.add(ventanaInterna);
-//                Dimension dskSize = desktopPane.getSize();
-//                Dimension frmSize = ventanaInterna.getSize();
-//                ventanaInterna.setLocation(0,0);
-//                ventanaInterna.setVisible(true);
-//            }
+            private void AgregarAVentana(JInternalFrame ventanaInterna){
+                desktopPane.add(ventanaInterna);
+                Dimension dskSize = desktopPane.getSize();
+                Dimension frmSize = ventanaInterna.getSize();
+                ventanaInterna.setLocation(0,0);
+                ventanaInterna.setVisible(true);
+            }
         });
         JMenuItem sell = new JMenuItem("Vendedores");
         sell.setBackground(new Color(46, 21, 59));
@@ -254,7 +248,7 @@ public class mainPage extends JFrame {
         TablePanel tablePanel= new TablePanel();
         add(tablePanel);
 
-        MainMenu menu = new MainMenu();
+        //MainMenu menu = new MainMenu();
         mainPanel.add(barOne);
         mainPanel.add(bar);
 
