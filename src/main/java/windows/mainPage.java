@@ -132,11 +132,12 @@ public class mainPage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                desktopPane = new JDesktopPane();
-               getContentPane().add(desktopPane);
-
-                AgregarAVentana(Admin.getInstancia());
-                setVisible(true);
-               new AdminNormal();
+               Admin admin1 = new Admin();
+               desktopPane.add(admin1);
+               admin1.setVisible(true);
+               add(desktopPane);
+              // new AdminNormal();
+               new Admin();
 
             }
             private void AgregarAVentana(JInternalFrame ventanaInterna){
