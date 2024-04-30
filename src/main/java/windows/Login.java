@@ -133,28 +133,28 @@ public class Login {
 
           @Override
           public void actionPerformed(ActionEvent e) {
-          String email = emailTextF.getText();
-          String emPtrn =
-          "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-          Pattern ptrn = Pattern.compile(emPtrn);
-          Matcher mtch = ptrn.matcher(email);
-
-          String password = new String(passTxtF.getPassword());
-          String passPtrn =
-          "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$@!%&*?])[A-Za-z\\d#$@!%&*?]{8,30}$";
-          Pattern pttn = Pattern.compile(passPtrn);
-          Matcher match = pttn.matcher(password);
-//          JOptionPane.showMessageDialog(null,mtch.matches());
-//          JOptionPane.showMessageDialog(null, match.matches());
-          if (mtch.matches() && match.matches()){
-          JOptionPane.showMessageDialog(null,"Hecho","éxito",
-          JOptionPane.INFORMATION_MESSAGE);
-          new mainPage();
-          } else {
-          JOptionPane.showMessageDialog(null, "Correo o contraseña inválidos",
-          "Error",JOptionPane.ERROR_MESSAGE);
-          }
-
+//          String email = emailTextF.getText();
+//          String emPtrn =
+//          "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+//          Pattern ptrn = Pattern.compile(emPtrn);
+//          Matcher mtch = ptrn.matcher(email);
+//
+//          String password = new String(passTxtF.getPassword());
+//          String passPtrn =
+//          "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$@!%&*?])[A-Za-z\\d#$@!%&*?]{8,30}$";
+//          Pattern pttn = Pattern.compile(passPtrn);
+//          Matcher match = pttn.matcher(password);
+////          JOptionPane.showMessageDialog(null,mtch.matches());
+////          JOptionPane.showMessageDialog(null, match.matches());
+//          if (mtch.matches() && match.matches()){
+//          JOptionPane.showMessageDialog(null,"Hecho","éxito",
+//          JOptionPane.INFORMATION_MESSAGE);
+//          new mainPage();
+//          } else {
+//          JOptionPane.showMessageDialog(null, "Correo o contraseña inválidos",
+//          "Error",JOptionPane.ERROR_MESSAGE);
+//          }
+                new mainPage();
           }
           });
 

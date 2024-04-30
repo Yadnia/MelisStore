@@ -1,6 +1,7 @@
 
 package Forms;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -10,7 +11,13 @@ public class Admin extends JInternalFrame {
     public Admin(){
         super("Administradores",true,true,true);
         JPanel panel1 = new JPanel();
+        panel1.setBackground(Color.CYAN);
+        setOpaque(true);
+        setBorder(new LineBorder(Color.white,1,true));
+        getContentPane().add(panel1, BorderLayout.CENTER);
+        getContentPane().setPreferredSize(new Dimension(400,400));
         setVisible(true);
+
     }
 
 }

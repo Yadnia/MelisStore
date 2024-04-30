@@ -3,7 +3,9 @@ package windows;
 import Forms.*;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,8 +16,9 @@ public class mainPage extends JFrame {
     JFrame mainFrame = new JFrame();
     public static JDesktopPane desktopPane;
 
-    public mainPage(){
 
+    public mainPage(){
+        desktopPane = new JDesktopPane();
 
         //pantalla
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -25,7 +28,7 @@ public class mainPage extends JFrame {
        setLocationRelativeTo(null);
         setResizable(true);
         getContentPane().setBackground(new Color(46, 21, 59));
-        setLayout(null);
+        setLayout(new BorderLayout());
 
         //titulo
         JLabel label1 = new JLabel();
@@ -34,11 +37,11 @@ public class mainPage extends JFrame {
         label1.setFont(new Font("Outfit ExtraBold",Font.BOLD,40));
         label1.setForeground(new Color(255, 179, 2));
         label1.setBounds(125,30,800,50);
-        add(label1);
 
         JPanel mainPanel = new JPanel();
-        mainPanel.setBounds(65,100,600,200);
+        mainPanel.setBounds(65,100,600,400);
         mainPanel.setBackground(new Color(137, 109, 150));
+        add(label1, BorderLayout.SOUTH);
 
         UIManager.put("MenuItem.selectionBackground", new Color(137, 109, 150));
        JMenuBar barOne = new JMenuBar();
@@ -131,13 +134,133 @@ public class mainPage extends JFrame {
         admin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               desktopPane = new JDesktopPane();
-               Admin admin1 = new Admin();
-               desktopPane.add(admin1);
-               admin1.setVisible(true);
-               add(desktopPane);
-              // new AdminNormal();
-               new Admin();
+
+                JInternalFrame internalFrame = new JInternalFrame("Administradores", true, true, true, true);
+                Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+                internalFrame.setSize(new Dimension(screen.width-800, screen.height-100));
+                internalFrame.setResizable(true);
+                internalFrame.getContentPane().setBackground(new Color(46, 21, 59));
+                internalFrame.setLayout(null);
+
+
+                Font font14 = new Font("Outfit SemiBold", Font.BOLD, 14);
+                Font font12 = new Font("Outfit SemiBold", Font.BOLD, 12);
+                Font font16 = new Font("Outfit SemiBold", Font.BOLD, 16);
+                Font font20= new Font("Outfit SemiBold", Font.BOLD, 20);
+                Color yell = new Color(255,179,2);
+                Color dk = new Color(46, 21, 59);
+
+                JLabel title = new JLabel("Administradores del negocio");
+                title.setForeground(yell);
+                title.setFont(font20);
+                title.setBounds(30,20,400,40);
+
+                JLabel nameA = new JLabel("Nombre:");
+                nameA.setForeground(yell);
+                nameA.setFont(font12);
+                nameA.setBounds(30,90,100,30);
+
+                JLabel apeA = new JLabel("Apellido:");
+                apeA.setForeground(yell);
+                apeA.setFont(font12);
+                apeA.setBounds(30,150,100,30);
+
+                JLabel cedA = new JLabel("Cedula:");
+                cedA.setForeground(yell);
+                cedA.setFont(font12);
+                cedA.setBounds(30,200,100,30);
+
+                JTextField namTxt = new JTextField();
+                namTxt.setOpaque(false);
+                namTxt.setBorder(new MatteBorder(0,0,1,0,yell));
+                namTxt.setBounds(90,90, 200,30);
+                namTxt.setForeground(yell);
+                namTxt.setFont(font12);
+
+                JTextField apetxt = new JTextField();
+                apetxt.setOpaque(false);
+                apetxt.setBorder(new MatteBorder(0,0,1,0,yell));
+                apetxt.setBounds(90,150, 200,30);
+                apetxt.setForeground(yell);
+                apetxt.setFont(font12);
+
+                JTextField cedtxt = new JTextField();
+                cedtxt.setOpaque(false);
+                cedtxt.setBorder(new MatteBorder(0,0,1,0,yell));
+                cedtxt.setBounds(90,200, 200,30);
+                cedtxt.setForeground(yell);
+                cedtxt.setFont(font12);
+
+                JButton addBtt = new JButton("Agregar");
+                addBtt.setText("Agregar Administrador");
+                addBtt.setOpaque(false);
+                addBtt.setFont(font14);
+                addBtt.setForeground(yell);
+                addBtt.setBorder(new MatteBorder(1,1,1,1,Color.WHITE));
+//        addBtt.setPreferredSize(new Dimension(300,40));
+                addBtt.setBounds(300,100,200,40);
+                JButton delBtt = new JButton("Eliminar");
+                delBtt.setText("Eliminar Administrador");
+                delBtt.setOpaque(false);
+                delBtt.setFont(font14);
+                delBtt.setForeground(yell);
+                delBtt.setBorder(new MatteBorder(1,1,1,1,Color.WHITE));
+//        addBtt.setPreferredSize(new Dimension(300,40));
+                delBtt.setBounds(300,170,200,40);
+
+                DefaultTableModel model1 = new DefaultTableModel();
+                model1.addColumn("Nombre");
+                model1.addColumn("Apellido");
+                model1.addColumn("N. Cedula");
+                JTable table1 = new JTable(model1);
+                table1.getTableHeader().setBackground(dk);
+                table1.getTableHeader().setForeground(yell);
+                table1.getTableHeader().setFont(font14);
+                table1.setBackground(yell);
+                table1.setForeground(dk);
+                table1.setFont(font12);
+                table1.setSelectionBackground(new Color(141, 98, 220));
+
+                JScrollPane scrollPane = new JScrollPane(table1);
+                JPanel tablePanel = new JPanel();
+                tablePanel.setBounds(30,300,500,700);
+                tablePanel.setBackground(yell);
+                tablePanel.add(scrollPane);
+
+                addBtt.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String name = namTxt.getText();
+                        String lastN = apetxt.getText();
+                        String cd = cedtxt.getText();
+
+                        model1.addRow(new Object[]{name,lastN,cd});
+                    }
+                });
+                delBtt.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        int num = table1.getSelectedRow();
+                        model1.removeRow(num);
+                    }
+                });
+
+                internalFrame.add(tablePanel);
+                internalFrame.add(title);
+                internalFrame.add(nameA);
+                internalFrame.add(namTxt);
+                internalFrame.add(apeA);
+                internalFrame.add(apetxt);
+                internalFrame.add(cedA);
+                internalFrame.add(cedtxt);
+                internalFrame.add(addBtt);
+                internalFrame.add(delBtt);
+                Dimension screen1 = Toolkit.getDefaultToolkit().getScreenSize();
+                internalFrame.setSize(new Dimension(screen.width-800, screen.height-100));
+                internalFrame.setVisible(true);
+
+                desktopPane.add(internalFrame);
+                add(desktopPane, BorderLayout.CENTER);
 
             }
             private void AgregarAVentana(JInternalFrame ventanaInterna){
@@ -165,7 +288,127 @@ public class mainPage extends JFrame {
         client.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new ClientNormal();
+                JInternalFrame internalFrame = new JInternalFrame("Clientes", true, true, true, true);
+                Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+                internalFrame.setSize(new Dimension(screen.width-800, screen.height-100));
+                internalFrame.setResizable(true);
+                internalFrame.getContentPane().setBackground(new Color(46, 21, 59));
+                internalFrame.setLayout(null);
+
+
+                Font font14 = new Font("Outfit SemiBold", Font.BOLD, 14);
+                Font font12 = new Font("Outfit SemiBold", Font.BOLD, 12);
+                Font font16 = new Font("Outfit SemiBold", Font.BOLD, 16);
+                Font font20= new Font("Outfit SemiBold", Font.BOLD, 20);
+                Color yell = new Color(255,179,2);
+                Color dk = new Color(46, 21, 59);
+
+                JLabel title = new JLabel("Clientes del negocio");
+                title.setForeground(yell);
+                title.setFont(font20);
+                title.setBounds(30,20,400,40);
+
+                JLabel nameA = new JLabel("Nombre:");
+                nameA.setForeground(yell);
+                nameA.setFont(font12);
+                nameA.setBounds(30,90,100,30);
+
+                JLabel apeA = new JLabel("Apellido:");
+                apeA.setForeground(yell);
+                apeA.setFont(font12);
+                apeA.setBounds(30,150,100,30);
+
+                JLabel cedA = new JLabel("Cedula:");
+                cedA.setForeground(yell);
+                cedA.setFont(font12);
+                cedA.setBounds(30,200,100,30);
+
+                JTextField namTxt = new JTextField();
+                namTxt.setOpaque(false);
+                namTxt.setBorder(new MatteBorder(0,0,1,0,yell));
+                namTxt.setBounds(90,90, 200,30);
+                namTxt.setForeground(yell);
+                namTxt.setFont(font12);
+
+                JTextField apetxt = new JTextField();
+                apetxt.setOpaque(false);
+                apetxt.setBorder(new MatteBorder(0,0,1,0,yell));
+                apetxt.setBounds(90,150, 200,30);
+                apetxt.setForeground(yell);
+                apetxt.setFont(font12);
+                JTextField cedtxt = new JTextField();
+                cedtxt.setOpaque(false);
+                cedtxt.setBorder(new MatteBorder(0,0,1,0,yell));
+                cedtxt.setBounds(90,200, 200,30);
+                cedtxt.setForeground(yell);
+                cedtxt.setFont(font12);
+
+                JButton addBtt = new JButton("Agregar");
+                addBtt.setText("Agregar Cliente");
+                addBtt.setOpaque(false);
+                addBtt.setFont(font14);
+                addBtt.setForeground(yell);
+                addBtt.setBorder(new MatteBorder(1,1,1,1,Color.WHITE));
+//        addBtt.setPreferredSize(new Dimension(300,40));
+                addBtt.setBounds(300,100,200,40);
+                JButton delBtt = new JButton("Eliminar");
+                delBtt.setText("Eliminar Cliente");
+                delBtt.setOpaque(false);
+                delBtt.setFont(font14);
+                delBtt.setForeground(yell);
+                delBtt.setBorder(new MatteBorder(1,1,1,1,Color.WHITE));
+//        addBtt.setPreferredSize(new Dimension(300,40));
+                delBtt.setBounds(300,170,200,40);
+
+                DefaultTableModel model1 = new DefaultTableModel();
+                model1.addColumn("Nombre");
+                model1.addColumn("Apellido");
+                model1.addColumn("N. Cedula");
+                JTable table1 = new JTable(model1);
+                table1.getTableHeader().setBackground(dk);
+                table1.getTableHeader().setForeground(yell);
+                table1.getTableHeader().setFont(font14);
+                table1.setBackground(yell);
+                table1.setForeground(dk);
+                table1.setFont(font12);
+                table1.setSelectionBackground(new Color(141, 98, 220));
+
+                JScrollPane scrollPane = new JScrollPane(table1);
+                JPanel tablePanel = new JPanel();
+                tablePanel.setBounds(30,300,500,700);
+                tablePanel.setBackground(yell);
+                tablePanel.add(scrollPane);
+
+                addBtt.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String name = namTxt.getText();
+                        String lastN = apetxt.getText();
+                        String cd = cedtxt.getText();
+
+                        model1.addRow(new Object[]{name,lastN,cd});
+                    }
+                });
+                delBtt.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        int num = table1.getSelectedRow();
+                        model1.removeRow(num);
+                    }
+                });
+
+                internalFrame.add(tablePanel);
+                internalFrame.add(title);
+                internalFrame.add(nameA);
+                internalFrame.add(namTxt);
+                internalFrame.add(apeA);
+                internalFrame.add(apetxt);
+                internalFrame.add(cedA);
+                internalFrame.add(cedtxt);
+                internalFrame.add(addBtt);
+                internalFrame.add(delBtt);
+                internalFrame.setVisible(true);
+                desktopPane.add(internalFrame);
             }
         });
         JMenuItem prov = new JMenuItem("Productos");
@@ -251,13 +494,16 @@ public class mainPage extends JFrame {
         bar.setBounds(100,100,200,30);
         bar.setOpaque(false);
 
-        add(mainPanel);
         TablePanel tablePanel= new TablePanel();
-        add(tablePanel);
+        tablePanel.setPreferredSize(new Dimension(300,200));
+        add(tablePanel, BorderLayout.SOUTH);
 
         //MainMenu menu = new MainMenu();
         mainPanel.add(barOne);
         mainPanel.add(bar);
+
+        add(mainPanel, BorderLayout.NORTH);
+        add(label1, BorderLayout.CENTER);
 
 
         setVisible(true);
