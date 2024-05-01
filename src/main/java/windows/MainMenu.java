@@ -1,43 +1,17 @@
 package windows;
 
-import Forms.*;
+import Forms.Admin;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URL;
 
-public class mainPage extends JFrame {
-
-    JFrame mainFrame = new JFrame();
+public class MainMenu extends JMenuBar{
     public static JDesktopPane desktopPane;
-
-
-    public mainPage() {
-        desktopPane = new JDesktopPane();
-
-        //pantalla
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Melis Store");
-        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize(new Dimension(screen.width - 800, screen.height - 100));
-        setLocationRelativeTo(null);
-        setResizable(true);
-        getContentPane().setBackground(new Color(46, 21, 59));
-        setLayout(new BorderLayout());
-
-        //titulo
-
-        JPanel mainPanel = new JPanel();
-        mainPanel.setBounds(65, 100, 600, 400);
-        mainPanel.setBackground(new Color(137, 109, 150));
-        mainPanel.setPreferredSize(new Dimension(600,100));
-
-        // MENU
+    public MainMenu(){
         desktopPane = new JDesktopPane();
 
         UIManager.put("MenuItem.selectionBackground", new Color(137, 109, 150));
@@ -111,13 +85,10 @@ public class mainPage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 desktopPane = new JDesktopPane();
-                getContentPane().add(desktopPane, BorderLayout.CENTER);
-                AgregarAVentana(Admin.getInstancia());
-                setVisible(true);
 
             }
         });
-        // -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         JMenuItem sell = new JMenuItem("Vendedores");
         sell.setBackground(new Color(46, 21, 59));
         sell.setForeground(Color.white);
@@ -560,24 +531,13 @@ public class mainPage extends JFrame {
         searchMenu.setPreferredSize(new Dimension(300, 30));
 
 
-        barOne.add(mainMenu);
-        barOne.add(secMenu);
-        barOne.add(searchMenu);
-        barOne.setOpaque(false);
-        barOne.setBorder(new MatteBorder(1, 1, 1, 1, Color.WHITE));
-        barOne.setForeground(Color.white);
-        barOne.setPreferredSize(new Dimension(600, 30));
-
-
-        mainPanel.add(barOne, BorderLayout.NORTH);
-        ToolBar bar = new ToolBar();
-        mainPanel.add(bar, BorderLayout.WEST);
-
-
-        add(mainPanel, BorderLayout.NORTH);
-
-
-        setVisible(true);
+        add(mainMenu);
+        add(secMenu);
+        add(searchMenu);
+        setOpaque(false);
+        setBorder(new MatteBorder(1, 1, 1, 1, Color.WHITE));
+        setForeground(Color.white);
+        setPreferredSize(new Dimension(600, 30));
 
     }
     private void AgregarAVentana(JInternalFrame ventanaInterna){
@@ -587,5 +547,4 @@ public class mainPage extends JFrame {
         ventanaInterna.setLocation(0,0);
         ventanaInterna.setVisible(true);
     }
-
 }
