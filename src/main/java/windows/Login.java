@@ -154,7 +154,8 @@ public class Login {
 //          JOptionPane.showMessageDialog(null, "Correo o contraseña inválidos",
 //          "Error",JOptionPane.ERROR_MESSAGE);
 //          }
-                new mainPage();
+              frame1.dispose();
+              new mainPage().setVisible(true);
           }
           });
 
@@ -164,5 +165,7 @@ public class Login {
         frame1.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
     }
+
+
 
 }

@@ -2,10 +2,7 @@
 package Forms;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
-import javax.swing.border.MatteBorder;
-import javax.swing.border.TitledBorder;
+import javax.swing.border.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -77,7 +74,7 @@ public class Admin extends JInternalFrame {
         cedtxt.setForeground(yell);
         cedtxt.setFont(font12);
         cedtxt.setColumns(20);
-        cedtxt.setPreferredSize(new Dimension(200,20));
+        cedtxt.setPreferredSize(new Dimension(300,20));
 
         JButton addBtt = new JButton();
         addBtt.setText("Agregar Administrador");
@@ -85,14 +82,20 @@ public class Admin extends JInternalFrame {
         addBtt.setFont(font14);
         addBtt.setForeground(yell);
         addBtt.setBorder(new MatteBorder(1, 1, 1, 1, Color.WHITE));
-        addBtt.setPreferredSize(new Dimension(100,20));
+        addBtt.setPreferredSize(new Dimension(200,20));
         JButton delBtt = new JButton();
         delBtt.setText("Eliminar Administrador");
         delBtt.setOpaque(false);
         delBtt.setFont(font14);
         delBtt.setForeground(yell);
         delBtt.setBorder(new MatteBorder(1, 1, 1, 1, Color.WHITE));
-        delBtt.setPreferredSize(new Dimension(100,20));
+        delBtt.setPreferredSize(new Dimension(200,20));
+        JButton edBtt = new JButton("Editar Administrador");
+        edBtt.setPreferredSize(new Dimension(200,20));
+        edBtt.setOpaque(false);
+        edBtt.setFont(font14);
+        edBtt.setForeground(yell);
+        delBtt.setBorder(new MatteBorder(1,1,1,1,Color.WHITE));
 
 
         DefaultTableModel model1 = new DefaultTableModel();
@@ -131,39 +134,48 @@ public class Admin extends JInternalFrame {
                 model1.removeRow(num);
             }
         });
+        edBtt.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = table1.getSelectedRow();
+                // accion para editar
+            }
+        });
         JPanel panel = new JPanel();
        // panel.setPreferredSize(new Dimension(600, 200));
         panel.setBackground(dk);
         panel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-//        gbc.insets = new Insets(5,5,5,5);
+        gbc.insets = new Insets(3,10,5,5);
+        gbc.gridwidth =3;
         gbc.gridx = 0;
-        gbc.gridy =0;
-        panel.add(title);
+        gbc.gridy = 0;
+        panel.add(title, gbc);
+        gbc.gridwidth =1;
         gbc.gridx = 0;
         gbc.gridy = 1;
-        panel.add(nameA,gbc);
+        panel.add(nameA, gbc);
         gbc.gridx = 1;
-        gbc.gridy =1;
-        panel.add(namTxt,gbc);
+        panel.add(namTxt, gbc);
         gbc.gridx = 2;
-        gbc.gridy = 1;
         panel.add(addBtt, gbc);
-        gbc.gridx=0;
-        gbc.gridy=2;
-        panel.add(apeA,gbc);
-        gbc.gridx=1;
-        gbc.gridy=2;
-        panel.add(apetxt,gbc);
-        gbc.gridx=2;
-        gbc.gridy=2;
-        panel.add(delBtt,gbc);
-        gbc.gridx=0;
-        gbc.gridy=3;
-        panel.add(cedA,gbc);
-        gbc.gridx=1;
-        gbc.gridy=3;
-        panel.add(cedtxt,gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add(apeA, gbc);
+        gbc.gridx = 1;
+        panel.add(apetxt, gbc);
+        gbc.gridx = 2;
+        panel.add(delBtt, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        panel.add(cedA, gbc);
+        gbc.gridx = 1;
+        panel.add(cedtxt, gbc);
+        gbc.gridx = 2;
+        panel.add(edBtt, gbc);
+
 
         add(panel, BorderLayout.NORTH);
         add(tablePanel, BorderLayout.SOUTH);
