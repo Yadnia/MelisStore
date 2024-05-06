@@ -12,10 +12,9 @@ public class Sell extends JInternalFrame {
     static Sell mySell;
 
     private Sell(){
-        super ("Vendedores",true,true,true);
+        super ("Vendedores",true,true,true,true);
         setTitle("Vendedores");
-        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize(new Dimension(screen.width-800, screen.height-100));
+        setSize(new Dimension(750,600));
         setResizable(true);
         getContentPane().setBackground(new Color(46, 21, 59));
         setLayout(new BorderLayout());
@@ -131,8 +130,13 @@ public class Sell extends JInternalFrame {
         edBtt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int rowSel = table1.getSelectedRow();
-                //op para editar
+                int row = table1.getSelectedRow();
+                String name = namTxt.getText();
+                String surName =apetxt.getText();
+                String IDE = cedtxt.getText();
+                model1.setValueAt(name,row,0);
+                model1.setValueAt(surName,row,1);
+                model1.setValueAt(IDE,row,2);
             }
         });
         JPanel panel = new JPanel();

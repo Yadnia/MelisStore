@@ -12,7 +12,7 @@ public class Admin extends JInternalFrame {
     static Admin myAdmin;
 
     private Admin() {
-        super("Administradores", true, true, true);
+        super("Administradores", true, true, true,true);
         InicializarAdmin();
         myAdmin = this;
     }
@@ -20,7 +20,8 @@ public class Admin extends JInternalFrame {
     private void InicializarAdmin() {
         setLayout(new BorderLayout());
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize(new Dimension(screen.width - 800, screen.height - 100));
+        //setSize(new Dimension(screen.width - 800, screen.height - 100));
+        setSize(new Dimension(750,600));
         setResizable(true);
         getContentPane().setBackground(new Color(46, 21, 59));
         Font font14 = new Font("Outfit SemiBold", Font.BOLD, 14);
@@ -138,7 +139,12 @@ public class Admin extends JInternalFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int row = table1.getSelectedRow();
-                // accion para editar
+                String name = namTxt.getText();
+                String surName =apetxt.getText();
+                String IDE = cedtxt.getText();
+                model1.setValueAt(name,row,0);
+                model1.setValueAt(surName,row,1);
+                model1.setValueAt(IDE,row,2);
             }
         });
         JPanel panel = new JPanel();

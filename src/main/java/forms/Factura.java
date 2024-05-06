@@ -8,7 +8,7 @@ public class Factura extends JInternalFrame {
     static Factura myFactura;
 
     private Factura(){
-        super("Factura", true, true, true);
+        super("Factura", true, true, true,true);
         InicializarFac();
         myFactura = this;
 
@@ -16,7 +16,7 @@ public class Factura extends JInternalFrame {
 
     private void InicializarFac(){
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize(new Dimension(screen.width-800, screen.height-100));
+        setSize(new Dimension(750,600));
         setResizable(true);
         getContentPane().setBackground(new Color(46, 21, 59));
         setLayout(new BorderLayout());
@@ -28,6 +28,51 @@ public class Factura extends JInternalFrame {
         Color dk = new Color(46, 21, 59);
 
 
+        //PANEL
+        JPanel panel1 = new JPanel();
+        panel1.setLayout(new GridBagLayout());
+
+        //LABELS Y TEXTFIELDS
+        JLabel prod = new JLabel("Producto");
+        JLabel sell = new JLabel("Vendedor");
+        JLabel client = new JLabel("Cliente");
+
+        JTextField prodTxt = new JTextField();
+        prodTxt.setColumns(10);
+        JTextField sellTxt = new JTextField();
+        sellTxt.setColumns(10);
+        JTextField clientTxt = new JTextField();
+        clientTxt.setColumns(10);
+
+        //BOTONES
+        JButton create = new JButton("Crear");
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5,5,5,5);
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel1.add(prod, gbc);
+        gbc.gridx = 1;
+        panel1.add(prodTxt,gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel1.add(sell, gbc);
+        gbc.gridx = 1;
+        panel1.add(sellTxt,gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel1.add(client, gbc);
+        gbc.gridx = 1;
+        panel1.add(clientTxt,gbc);  gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel1.add(prod, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        panel1.add(create,gbc);
+
+        add(panel1, BorderLayout.CENTER);
 
     }
     public static Factura getInstancia (){

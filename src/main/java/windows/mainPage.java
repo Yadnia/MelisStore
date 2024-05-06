@@ -21,7 +21,7 @@ public class mainPage extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Melis Store");
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize(new Dimension(screen.width - 800, screen.height - 100));
+        setSize(new Dimension(750,700));
         setLocationRelativeTo(null);
         setResizable(true);
         getContentPane().setBackground(new Color(46, 21, 59));
