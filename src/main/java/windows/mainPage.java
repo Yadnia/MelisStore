@@ -1,11 +1,9 @@
 package windows;
 
-import Forms.*;
+import forms.*;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +11,6 @@ import java.net.URL;
 
 public class mainPage extends JFrame {
 
-    JFrame mainFrame = new JFrame();
     public static JDesktopPane desktopPane;
 
 
@@ -72,6 +69,18 @@ public class mainPage extends JFrame {
         createFac.setBackground(new Color(46, 21, 59));
         createFac.setForeground(Color.white);
         createFac.addActionListener(ctFca);
+
+        //-----------------------------------------------------
+        //InternalFrame de crear una factura
+        createFac.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                desktopPane = new JDesktopPane();
+                getContentPane().add(desktopPane, BorderLayout.CENTER);
+                AgregarAVentana(Factura.getInstancia());
+                setVisible(true);
+            }
+        });
         JMenuItem out = new JMenuItem("Salir");
         out.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx(), false));
         out.setBackground(new Color(46, 21, 59));
