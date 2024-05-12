@@ -1,6 +1,10 @@
 package windows;
 
 import org.Yaed.App;
+import org.Yaed.entity.User;
+import org.Yaed.util.HibernateUtil;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -10,6 +14,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,6 +24,12 @@ public class Login {
     JFrame frame1 = new JFrame();
 
     public Login() {
+        //crear el usuario
+        User user = new User("yadnia@gmail.com","P@ssw0rd!", "admin");
+        guardarUsuario(user);
+        List<User> usuarios = getUsers();
+        usuarios.forEach(System.out::println);
+
         URL rutaimg = App.class.getResource("/IconLogin.png");
         ImageIcon iconImg = new ImageIcon(rutaimg);
         frame1.setIconImage(iconImg.getImage());
@@ -118,44 +130,42 @@ public class Login {
         smtBt.setBackground(new Color(255, 179, 2));
         smtBt.setFont(new Font("Outfit SemiBold", Font.BOLD, 15));
 
-//        smtBt.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                frame1.setVisible(false);
-//                mainPage main = new mainPage();
-//                main.setVisible(true);
-//            }
-//        });
-
-
-
           smtBt.addActionListener(new ActionListener() {
 
           @Override
           public void actionPerformed(ActionEvent e) {
-//          String email = emailTextF.getText();
-//          String emPtrn =
-//          "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-//          Pattern ptrn = Pattern.compile(emPtrn);
-//          Matcher mtch = ptrn.matcher(email);
-//
-//          String password = new String(passTxtF.getPassword());
-//          String passPtrn =
-//          "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$@!%&*?])[A-Za-z\\d#$@!%&*?]{8,30}$";
-//          Pattern pttn = Pattern.compile(passPtrn);
-//          Matcher match = pttn.matcher(password);
-////          JOptionPane.showMessageDialog(null,mtch.matches());
-////          JOptionPane.showMessageDialog(null, match.matches());
-//          if (mtch.matches() && match.matches()){
-//          JOptionPane.showMessageDialog(null,"Hecho","éxito",
-//          JOptionPane.INFORMATION_MESSAGE);
-//          new mainPage();
-//          } else {
-//          JOptionPane.showMessageDialog(null, "Correo o contraseña inválidos",
-//          "Error",JOptionPane.ERROR_MESSAGE);
-//          }
-              frame1.dispose();
-              new mainPage().setVisible(true);
+          String email = emailTextF.getText();
+          String emPtrn =
+          "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+          Pattern ptrn = Pattern.compile(emPtrn);
+          Matcher mtch = ptrn.matcher(email);
+
+          String password = new String(passTxtF.getPassword());
+          String passPtrn =
+          "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$@!%&*?])[A-Za-z\\d#$@!%&*?]{8,30}$";
+          Pattern pttn = Pattern.compile(passPtrn);
+          Matcher match = pttn.matcher(password);
+//          JOptionPane.showMessageDialog(null,mtch.matches());
+//          JOptionPane.showMessageDialog(null, match.matches());
+              boolean validUser = false;
+              for (User user: usuarios){
+                  if (user.getUserEmail().equalsIgnoreCase(email)&& user.getUserPassword().equals(password)){
+                      validUser = true;
+                  }
+              }
+
+          if (mtch.matches() && match.matches()){
+              if (validUser){
+                  frame1.dispose();
+                  new mainPage().setVisible(true);
+              }
+              else {
+                  JOptionPane.showMessageDialog(null,"Usuario no registrado");
+              }
+          } else {
+          JOptionPane.showMessageDialog(null, "Correo o contraseña inválidos",
+          "Error",JOptionPane.ERROR_MESSAGE);
+          }
           }
           });
 
@@ -166,6 +176,32 @@ public class Login {
 
     }
 
-
+    private static void guardarUsuario (User user){
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()){
+            transaction = session.beginTransaction();
+            session.save(user);
+            transaction.commit();
+        } catch (Exception e){
+            e.printStackTrace();{
+                if (transaction != null){
+                    transaction.rollback();
+                }
+            }
+        }
+    }
+    private static List <User> getUsers (){
+        Transaction transaction = null;
+        List <User> users = new ArrayList<>();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()){
+            users = session.createQuery("from User", User.class).list();
+        } catch (Exception e){
+            e.printStackTrace();
+            if (transaction != null){
+                transaction.rollback();
+            }
+        }
+        return users;
+    }
 
 }

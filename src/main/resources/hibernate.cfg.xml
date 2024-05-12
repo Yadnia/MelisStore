@@ -12,6 +12,6 @@
         <property name="show_sql">true</property>
         <property name="current_session_context_class">thread</property>
         <property name="hbm2ddl.auto">create-drop</property>
-        <mapping class="org.Yaed.entity.Estudiante"></mapping>
+        <mapping class="org.Yaed.entity.User"></mapping>
     </session-factory>
 </hibernate-configuration>
