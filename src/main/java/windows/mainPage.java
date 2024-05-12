@@ -46,7 +46,7 @@ public class mainPage extends JFrame {
         ActionListener ctFca = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Crear Factura");
+                JOptionPane.showConfirmDialog(null, "Hacer Factura?");
             }
         };
         ActionListener outa = new ActionListener() {

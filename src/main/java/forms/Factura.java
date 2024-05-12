@@ -1,6 +1,7 @@
 package forms;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 
 public class Factura extends JInternalFrame {
@@ -26,23 +27,40 @@ public class Factura extends JInternalFrame {
         Font font20= new Font("Outfit SemiBold", Font.BOLD, 20);
         Color yell = new Color(255,179,2);
         Color dk = new Color(46, 21, 59);
+        MatteBorder border = new MatteBorder(0,0,1,0,Color.WHITE);
 
 
         //PANEL
         JPanel panel1 = new JPanel();
         panel1.setLayout(new GridBagLayout());
+        panel1.setBackground(dk);
 
         //LABELS Y TEXTFIELDS
         JLabel prod = new JLabel("Producto");
+        prod.setFont(font14);
+        prod.setForeground(yell);
         JLabel sell = new JLabel("Vendedor");
+        sell.setFont(font14);
+        sell.setForeground(yell);
         JLabel client = new JLabel("Cliente");
+        client.setFont(font14);
+        client.setForeground(yell);
 
         JTextField prodTxt = new JTextField();
         prodTxt.setColumns(10);
+        prodTxt.setOpaque(false);
+        prodTxt.setBorder(border);
+        prodTxt.setFont(font12);
         JTextField sellTxt = new JTextField();
         sellTxt.setColumns(10);
+        sellTxt.setOpaque(false);
+        sellTxt.setBorder(border);
+        sellTxt.setFont(font12);
         JTextField clientTxt = new JTextField();
         clientTxt.setColumns(10);
+        clientTxt.setOpaque(false);
+        clientTxt.setBorder(border);
+        clientTxt.setFont(font12);
 
         //BOTONES
         JButton create = new JButton("Crear");

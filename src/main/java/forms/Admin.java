@@ -152,7 +152,7 @@ public class Admin extends JInternalFrame {
         panel.setBackground(dk);
         panel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(3,10,5,5);
+        gbc.insets = new Insets(3,10,10,5);
         gbc.gridwidth =3;
         gbc.gridx = 0;
         gbc.gridy = 0;

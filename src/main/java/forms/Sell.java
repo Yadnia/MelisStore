@@ -11,8 +11,13 @@ public class Sell extends JInternalFrame {
 
     static Sell mySell;
 
-    private Sell(){
-        super ("Vendedores",true,true,true,true);
+    private Sell() {
+        super("Vendedores", true, true, true, true);
+        InicializarSell();
+        mySell = this;
+    }
+
+    private void InicializarSell(){
         setTitle("Vendedores");
         setSize(new Dimension(750,600));
         setResizable(true);
@@ -177,9 +182,7 @@ public class Sell extends JInternalFrame {
         add(panel, BorderLayout.NORTH);
         add(tablePanel, BorderLayout.SOUTH);
         setVisible(true);
-    }
 
-    private void InicializarSell(){
 
     }
     public static Sell getInstancia(){
