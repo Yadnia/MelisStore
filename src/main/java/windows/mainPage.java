@@ -104,13 +104,18 @@ public class mainPage extends JFrame {
         JMenuItem admin = new JMenuItem("Administradores");
         admin.setBackground(new Color(46, 21, 59));
         admin.setForeground(Color.white);
+
+        JPanel panel = new JPanel(new BorderLayout());
+        add (panel, BorderLayout.CENTER);
+
         //JINTERNALFRAME DE ADMINISTRADORES
         // -----------------------------------------------------------------------------------
         admin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 desktopPane = new JDesktopPane();
-                getContentPane().add(desktopPane, BorderLayout.CENTER);
+//                getContentPane().add(desktopPane, BorderLayout.CENTER);
+                panel.add(desktopPane, BorderLayout.CENTER);
                 AgregarAVentana(Admin.getInstancia());
                 setVisible(true);
 

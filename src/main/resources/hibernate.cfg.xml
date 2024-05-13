@@ -13,5 +13,6 @@
         <property name="current_session_context_class">thread</property>
         <property name="hbm2ddl.auto">create-drop</property>
         <mapping class="org.Yaed.entity.User"></mapping>
+        <mapping class="org.Yaed.entity.Administrador"></mapping>
     </session-factory>
 </hibernate-configuration>

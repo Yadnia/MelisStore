@@ -1,12 +1,22 @@
 
 package forms;
 
+import org.Yaed.entity.Administrador;
+import org.Yaed.util.HibernateUtil;
+import org.apache.commons.collections4.ArrayStack;
+import org.checkerframework.checker.units.qual.A;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.boot.registry.selector.spi.StrategyCreator;
+
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Admin extends JInternalFrame {
     static Admin myAdmin;
@@ -117,15 +127,19 @@ public class Admin extends JInternalFrame {
         tablePanel.setBounds(30, 300, 500, 700);
         tablePanel.setBackground(yell);
         tablePanel.add(scrollPane);
-
         addBtt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 String name = namTxt.getText();
                 String lastN = apetxt.getText();
                 String cd = cedtxt.getText();
+                Administrador administrador = new Administrador(name,lastN,cd);
+                guardarAdmin(administrador);
+                List <Administrador> admins = getAdmins();
+                admins.forEach(System.out::println);
+                model1.addRow(new Object[] {name,lastN,cd});
 
-                model1.addRow(new Object[]{name, lastN, cd});
             }
         });
         delBtt.addActionListener(new ActionListener() {
@@ -133,6 +147,9 @@ public class Admin extends JInternalFrame {
             public void actionPerformed(ActionEvent e) {
                 int num = table1.getSelectedRow();
                 model1.removeRow(num);
+                deleteAdmins(num);
+                List<Administrador> admins = getAdmins();
+                admins.forEach(System.out::println);
             }
         });
         edBtt.addActionListener(new ActionListener() {
@@ -145,6 +162,9 @@ public class Admin extends JInternalFrame {
                 model1.setValueAt(name,row,0);
                 model1.setValueAt(surName,row,1);
                 model1.setValueAt(IDE,row,2);
+                updateAdmins(row,name,surName,IDE);
+                List <Administrador> admins = getAdmins();
+                admins.forEach(System.out::println);
             }
         });
         JPanel panel = new JPanel();
@@ -191,5 +211,72 @@ public class Admin extends JInternalFrame {
     public static Admin getInstancia() {
         return null == myAdmin ? (new Admin()) : myAdmin;
     }
+
+    //Agregar admin
+    private static void guardarAdmin (Administrador administrador){
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()){
+            transaction = session.beginTransaction();
+            session.save(administrador);
+            transaction.commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            if (transaction!= null){
+                transaction.rollback();
+            }
+        }
+    }
+    //mostrar admins
+    private static List <Administrador> getAdmins(){
+        Transaction transaction = null;
+        List<Administrador> admins = new ArrayList<>();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()){
+            admins = session.createQuery("from Administrador", Administrador.class).list();
+        } catch (Exception e){
+            e.printStackTrace();
+            if (transaction != null){
+                transaction.rollback();
+            }
+        }
+        return admins;
+    }
+    //update admins
+    private static void updateAdmins(int index, String name, String surname, String ide){
+        Transaction transaction = null;
+        List<Administrador> admins = new ArrayList<>();
+        try(Session session = HibernateUtil.getSessionFactory().openSession();) {
+            admins = session.createQuery("from Administrador", Administrador.class).list();
+            transaction = session.beginTransaction();
+            Administrador admin = admins.get(index);
+            admin.setNames(name);
+            admin.setSurnames(surname);
+            admin.setIDE(ide);
+            session.update(admin);
+            transaction.commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            if (transaction != null)
+                transaction.rollback();
+        }
+        }
+
+        //Eliminar admins
+    private static void deleteAdmins (int index){
+        Transaction transaction = null;
+        List<Administrador> admins = new ArrayList<>();
+        try (Session session = HibernateUtil.getSessionFactory().openSession();){
+            admins = session.createQuery("from Administrador", Administrador.class).list();
+            transaction = session.beginTransaction();
+            Administrador admin = admins.get(index);
+            session.delete(admin);
+            transaction.commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            if (transaction != null){
+                transaction.rollback();
+            }
+        }
+    }
+
 }
 
