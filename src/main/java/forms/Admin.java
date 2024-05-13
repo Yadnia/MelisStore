@@ -110,6 +110,7 @@ public class Admin extends JInternalFrame {
 
 
         DefaultTableModel model1 = new DefaultTableModel();
+        model1.addColumn("Id");
         model1.addColumn("Nombre");
         model1.addColumn("Apellido");
         model1.addColumn("N. Cedula");
@@ -127,10 +128,10 @@ public class Admin extends JInternalFrame {
         tablePanel.setBounds(30, 300, 500, 700);
         tablePanel.setBackground(yell);
         tablePanel.add(scrollPane);
+        int a = 0;
         addBtt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 String name = namTxt.getText();
                 String lastN = apetxt.getText();
                 String cd = cedtxt.getText();
@@ -138,8 +139,8 @@ public class Admin extends JInternalFrame {
                 guardarAdmin(administrador);
                 List <Administrador> admins = getAdmins();
                 admins.forEach(System.out::println);
-                model1.addRow(new Object[] {name,lastN,cd});
-
+//                model1.addRow(new Object[] {name,lastN,cd});
+                model1.addRow(new Object[]{administrador.getIdAdmin(), administrador.getNames(), administrador.getSurnames(), administrador.getIDE()});
             }
         });
         delBtt.addActionListener(new ActionListener() {
@@ -159,9 +160,10 @@ public class Admin extends JInternalFrame {
                 String name = namTxt.getText();
                 String surName =apetxt.getText();
                 String IDE = cedtxt.getText();
-                model1.setValueAt(name,row,0);
-                model1.setValueAt(surName,row,1);
-                model1.setValueAt(IDE,row,2);
+
+                model1.setValueAt(name,row,1);
+                model1.setValueAt(surName,row,2);
+                model1.setValueAt(IDE,row,3);
                 updateAdmins(row,name,surName,IDE);
                 List <Administrador> admins = getAdmins();
                 admins.forEach(System.out::println);
@@ -277,6 +279,23 @@ public class Admin extends JInternalFrame {
             }
         }
     }
+    private static Administrador findSpecificAdmin(int index) {
+        Transaction transaction = null;
+        Administrador admin = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            List<Administrador> admins = session.createQuery("from Administrador", Administrador.class).list();
+            admin = admins.get(index);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return admin;
+    }
+
 
 }
 

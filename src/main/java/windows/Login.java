@@ -1,6 +1,7 @@
 package windows;
 
 import org.Yaed.App;
+import org.Yaed.entity.Administrador;
 import org.Yaed.entity.User;
 import org.Yaed.util.HibernateUtil;
 import org.hibernate.Session;
@@ -145,8 +146,7 @@ public class Login {
           "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$@!%&*?])[A-Za-z\\d#$@!%&*?]{8,30}$";
           Pattern pttn = Pattern.compile(passPtrn);
           Matcher match = pttn.matcher(password);
-//          JOptionPane.showMessageDialog(null,mtch.matches());
-//          JOptionPane.showMessageDialog(null, match.matches());
+
               boolean validUser = false;
               for (User user: usuarios){
                   if (user.getUserEmail().equalsIgnoreCase(email)&& user.getUserPassword().equals(password)){
@@ -203,5 +203,4 @@ public class Login {
         }
         return users;
     }
-
 }

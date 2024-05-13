@@ -30,6 +30,7 @@ public class Client extends JInternalFrame {
         Font font20= new Font("Outfit SemiBold", Font.BOLD, 20);
         Color yell = new Color(255,179,2);
         Color dk = new Color(46, 21, 59);
+        Color azulBonito = new Color(106, 106, 206);
 
         JLabel title = new JLabel("Clientes del negocio");
         title.setForeground(yell);
@@ -182,8 +183,6 @@ public class Client extends JInternalFrame {
 
         add(panel, BorderLayout.NORTH);
         add(tablePanel, BorderLayout.SOUTH);
-        setVisible(true);
-
 
     }
 
