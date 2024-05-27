@@ -3,6 +3,8 @@ package org.Yaed.entity;
 import jakarta.persistence.*;
 
 @Entity
+@Inheritance (strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn (name = "Tipo")
 @Table(name = "Usuarios")
 public class User {
     @Id
@@ -10,16 +12,13 @@ public class User {
     private String userEmail;
     @Column (name = "Password")
     private String userPassword;
-    @Column (name = "type")
-    private String userType;
 
     public User() {
     }
 
-    public User(String userEmail, String userPassword, String userType) {
+    public User(String userEmail, String userPassword) {
         this.userEmail = userEmail;
         this.userPassword = userPassword;
-        this.userType = userType;
     }
 
     public String getUserEmail() {
@@ -38,20 +37,13 @@ public class User {
         this.userPassword = userPassword;
     }
 
-    public String getUserType() {
-        return userType;
-    }
-
-    public void setUserType(String userType) {
-        this.userType = userType;
-    }
 
     @Override
     public String toString() {
         return "User{" +
                 "userEmail='" + userEmail + '\'' +
                 ", userPassword='" + userPassword + '\'' +
-                ", userType='" + userType + '\'' +
+
                 '}';
     }
 }

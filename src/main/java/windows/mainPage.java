@@ -7,6 +7,7 @@ import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyVetoException;
 import java.net.URL;
 
 public class mainPage extends JFrame {
@@ -16,7 +17,6 @@ public class mainPage extends JFrame {
 
     public mainPage() {
         desktopPane = new JDesktopPane();
-
         //pantalla
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Melis Store");
@@ -26,7 +26,6 @@ public class mainPage extends JFrame {
         setResizable(true);
         getContentPane().setBackground(new Color(46, 21, 59));
         setLayout(new BorderLayout());
-
         //titulo
 
         JPanel mainPanel = new JPanel();
@@ -35,13 +34,13 @@ public class mainPage extends JFrame {
         mainPanel.setPreferredSize(new Dimension(600,100));
 
         // MENU
-        desktopPane = new JDesktopPane();
 
         UIManager.put("MenuItem.selectionBackground", new Color(137, 109, 150));
         JMenuBar barOne = new JMenuBar();
         JMenu mainMenu = new JMenu("Inicio");
         JMenu secMenu = new JMenu("Herramientas");
         JMenu searchMenu = new JMenu("Ayuda");
+        this.getContentPane().add(desktopPane, BorderLayout.CENTER);
 
         ActionListener ctFca = new ActionListener() {
             @Override
@@ -75,9 +74,7 @@ public class mainPage extends JFrame {
         createFac.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                desktopPane = new JDesktopPane();
-                getContentPane().add(desktopPane, BorderLayout.CENTER);
-                AgregarAVentana(Factura.getInstancia());
+                addWindow(Factura.getInstancia());
                 setVisible(true);
             }
         });
@@ -105,20 +102,14 @@ public class mainPage extends JFrame {
         admin.setBackground(new Color(46, 21, 59));
         admin.setForeground(Color.white);
 
-        JPanel panel = new JPanel(new BorderLayout());
-        add (panel, BorderLayout.CENTER);
 
         //JINTERNALFRAME DE ADMINISTRADORES
         // -----------------------------------------------------------------------------------
         admin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                desktopPane = new JDesktopPane();
-//                getContentPane().add(desktopPane, BorderLayout.CENTER);
-                panel.add(desktopPane, BorderLayout.CENTER);
-                AgregarAVentana(Admin.getInstancia());
+                addWindow(Admin.getInstancia());
                 setVisible(true);
-
             }
         });
         // -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -130,9 +121,7 @@ public class mainPage extends JFrame {
 sell.addActionListener(new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
-        desktopPane = new JDesktopPane();
-        getContentPane().add(desktopPane, BorderLayout.CENTER);
-        AgregarAVentana((Sell.getInstancia()));
+        addWindow((Sell.getInstancia()));
         setVisible(true);
     }
 });
@@ -143,9 +132,7 @@ sell.addActionListener(new ActionListener() {
         client.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                desktopPane = new JDesktopPane();
-                getContentPane().add(desktopPane, BorderLayout.CENTER);
-                AgregarAVentana((Client.getInstancia()));
+                mostrarVentana((Client.getInstancia()));
                 setVisible(true);
             }
         });
@@ -157,9 +144,7 @@ sell.addActionListener(new ActionListener() {
         prov.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                desktopPane = new JDesktopPane();
-                getContentPane().add(desktopPane, BorderLayout.CENTER);
-                AgregarAVentana(Product.getInstancia());
+                addWindow(Product.getInstancia());
                 setVisible(true);
             }
         });
@@ -240,13 +225,32 @@ sell.addActionListener(new ActionListener() {
         setVisible(true);
 
     }
-    private void AgregarAVentana(JInternalFrame ventanaInterna){
+    public static void addWindow(JInternalFrame ventanaInterna){
         desktopPane.add(ventanaInterna);
         Dimension dskSize = desktopPane.getSize();
         Dimension frmSize = ventanaInterna.getSize();
         ventanaInterna.setLocation(0,0);
         ventanaInterna.setVisible(true);
     }
+    private static void mostrarVentana(JInternalFrame frm) {
+        try {
+            //Agrenga  la Ventana al escritorio si la ventana no esta visible
+            if (!frm.isVisible()) {
+                mainPage.addWindow(frm);
+            } else {
+                // si la ventana esta visible pero debajo de otras ventanas se mueve al frente y se selecciona
+                frm.moveToFront();
+                if (!frm.isSelected()) {
+                    frm.setSelected(true);
+                }
+            }
+
+        } catch (PropertyVetoException e) {
+            System.out.println("Error al activar la ventana Tipo de cuenta");
+        }
+
+    }
+
     class ToolbarAction extends AbstractAction {
 
         public ToolbarAction(String text, Icon icon, String description, char acelerator) {
@@ -261,27 +265,19 @@ sell.addActionListener(new ActionListener() {
                     String action = (String) getValue(NAME);
                     switch (action){
                         case "Agregar Admin" ->{
-                            desktopPane = new JDesktopPane();
-                            getContentPane().add(desktopPane,BorderLayout.CENTER);
-                            AgregarAVentana(Admin.getInstancia());
+                            addWindow(Admin.getInstancia());
                             setVisible(true);
                         }
                         case "Agregar Vendedor" ->{
-                            desktopPane = new JDesktopPane();
-                            getContentPane().add(desktopPane, BorderLayout.CENTER);
-                            AgregarAVentana(Sell.getInstancia());
+                            addWindow(Sell.getInstancia());
                             setVisible(true);
                         }
                         case "Agregar Cliente" ->{
-                            desktopPane = new JDesktopPane();
-                            getContentPane().add(desktopPane, BorderLayout.CENTER);
-                            AgregarAVentana(Client.getInstancia());
+                            addWindow(Client.getInstancia());
                             setVisible(true);
                         }
                         case "Agregar Producto" ->{
-                            desktopPane = new JDesktopPane();
-                            getContentPane().add(desktopPane,BorderLayout.CENTER);
-                            AgregarAVentana(Product.getInstancia());
+                            addWindow(Product.getInstancia());
                             setVisible(true);
                         }
                     }

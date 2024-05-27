@@ -92,6 +92,7 @@ public class Factura extends JInternalFrame {
 
         add(panel1, BorderLayout.CENTER);
 
+
     }
     public static Factura getInstancia (){
         return null == myFactura ? (new Factura()): myFactura;

@@ -112,7 +112,7 @@ public class Client extends JInternalFrame {
 
         JScrollPane scrollPane = new JScrollPane(table1);
         JPanel tablePanel = new JPanel();
-        tablePanel.setBounds(30,300,500,700);
+        tablePanel.setPreferredSize(new Dimension(600, 200));
         tablePanel.setBackground(yell);
         tablePanel.add(scrollPane);
 
@@ -147,7 +147,7 @@ public class Client extends JInternalFrame {
             }
         });
         JPanel panel = new JPanel();
-        //panel.setPreferredSize(new Dimension(600, 200));
+        panel.setPreferredSize(new Dimension(600, 210));
         panel.setBackground(dk);
         panel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -183,6 +183,7 @@ public class Client extends JInternalFrame {
 
         add(panel, BorderLayout.NORTH);
         add(tablePanel, BorderLayout.SOUTH);
+        pack();
 
     }
 

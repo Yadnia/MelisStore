@@ -243,6 +243,7 @@ public class Product extends JInternalFrame {
 
         add(panel, BorderLayout.NORTH);
         add(tablePanel, BorderLayout.SOUTH);
+        pack();
         setVisible(true);
 
     }

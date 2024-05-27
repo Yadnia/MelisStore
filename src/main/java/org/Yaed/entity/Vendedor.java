@@ -4,24 +4,45 @@ import jakarta.persistence.*;
 import org.checkerframework.checker.units.qual.C;
 
 @Entity
-@Table (name = "Vendedores")
-public class Vendedor {
-    @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column (name = "sellId")
-    private int SellId;
-    @Column (name = "sellName")
+@DiscriminatorValue("Vendedor")
+public class Vendedor extends User{
+
+    @Column (name = "Nombre Vendedor")
     private String names;
-    @Column (name = "sellSurname")
+    @Column (name = "Apellido Vendedor")
     private String Surnames;
-    @Column (name = "sellIDE")
+    @Column (name = "Cedula Vendedor")
     private String IDE;
+
+    public String getNames() {
+        return names;
+    }
+
+    public void setNames(String names) {
+        this.names = names;
+    }
+
+    public String getSurnames() {
+        return Surnames;
+    }
+
+    public void setSurnames(String surnames) {
+        Surnames = surnames;
+    }
+
+    public String getIDE() {
+        return IDE;
+    }
+
+    public void setIDE(String IDE) {
+        this.IDE = IDE;
+    }
 
     public Vendedor() {
     }
 
-    public Vendedor(int sellId, String names, String surnames, String IDE) {
-        SellId = sellId;
+    public Vendedor(String userEmail, String userPassword, String names, String surnames, String IDE) {
+        super(userEmail, userPassword);
         this.names = names;
         Surnames = surnames;
         this.IDE = IDE;
@@ -30,7 +51,7 @@ public class Vendedor {
     @Override
     public String toString() {
         return "Vendedor{" +
-                "SellId=" + SellId +
+              super.toString()+
                 ", names='" + names + '\'' +
                 ", Surnames='" + Surnames + '\'' +
                 ", IDE='" + IDE + '\'' +

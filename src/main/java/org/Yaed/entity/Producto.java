@@ -12,8 +12,6 @@ public class Producto {
     private int ProductId;
     @Column (name = "prodDesc")
     private String description;
-    @Column (name = "prodCategory")
-    private String category;
     @Column (name = "prodColor")
     private String color;
     @Column (name = "prodSize")
@@ -24,10 +22,9 @@ public class Producto {
     public Producto() {
     }
 
-    public Producto(int productId, String description, String category, String color, String size, int stock) {
+    public Producto(int productId, String description,  String color, String size, int stock) {
         ProductId = productId;
         this.description = description;
-        this.category = category;
         this.color = color;
         this.size = size;
         this.stock = stock;
@@ -38,7 +35,6 @@ public class Producto {
         return "Producto{" +
                 "ProductId=" + ProductId +
                 ", description='" + description + '\'' +
-                ", category='" + category + '\'' +
                 ", color='" + color + '\'' +
                 ", size='" + size + '\'' +
                 ", stock=" + stock +

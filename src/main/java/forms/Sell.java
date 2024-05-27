@@ -1,11 +1,19 @@
 package forms;
 
+import org.Yaed.entity.User;
+import org.Yaed.entity.Vendedor;
+import org.Yaed.services.GenericServiceImpl;
+import org.Yaed.services.IGenericService;
+import org.Yaed.util.HibernateUtil;
+
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Sell extends JInternalFrame {
 
@@ -18,7 +26,6 @@ public class Sell extends JInternalFrame {
     }
 
     private void InicializarSell(){
-        setTitle("Vendedores");
         setSize(new Dimension(750,600));
         setResizable(true);
         getContentPane().setBackground(new Color(46, 21, 59));
@@ -31,6 +38,7 @@ public class Sell extends JInternalFrame {
         Font font20= new Font("Outfit SemiBold", Font.BOLD, 20);
         Color yell = new Color(255,179,2);
         Color dk = new Color(46, 21, 59);
+        Color azulBonito = new Color(106, 106, 206);
 
         JLabel title = new JLabel("Vendedores del negocio");
         title.setForeground(yell);
@@ -96,6 +104,7 @@ public class Sell extends JInternalFrame {
         edBtt.setForeground(yell);
         delBtt.setBorder(new MatteBorder(1,1,1,1,Color.WHITE));
 
+
         DefaultTableModel model1 = new DefaultTableModel();
         model1.addColumn("Nombre");
         model1.addColumn("Apellido");
@@ -111,7 +120,7 @@ public class Sell extends JInternalFrame {
 
         JScrollPane scrollPane = new JScrollPane(table1);
         JPanel tablePanel = new JPanel();
-        tablePanel.setBounds(30,300,500,700);
+        tablePanel.setPreferredSize(new Dimension(600, 200));
         tablePanel.setBackground(yell);
         tablePanel.add(scrollPane);
 
@@ -145,7 +154,7 @@ public class Sell extends JInternalFrame {
             }
         });
         JPanel panel = new JPanel();
-        //panel.setPreferredSize(new Dimension(600, 200));
+        panel.setPreferredSize(new Dimension(600, 210));
         panel.setBackground(dk);
         panel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -181,11 +190,30 @@ public class Sell extends JInternalFrame {
 
         add(panel, BorderLayout.NORTH);
         add(tablePanel, BorderLayout.SOUTH);
-        setVisible(true);
-
+        pack();
 
     }
     public static Sell getInstancia(){
         return null == mySell ? (new Sell()): mySell;
     }
-}
+    private static void saveSeller(User user){
+        IGenericService<User> userSeervice = new GenericServiceImpl<>(User.class, HibernateUtil.getSessionFactory());
+        userSeervice.save(user);
+        }
+
+        private static void updateSeller(User user){
+        IGenericService<User> userService = new GenericServiceImpl<>(User.class, HibernateUtil.getSessionFactory());
+        userService.update(user);
+        }
+        private static void deleteSeller (User user) {
+        IGenericService<User> userService = new GenericServiceImpl<>(User.class, HibernateUtil.getSessionFactory());
+        userService.delete(user);
+        }
+        private static List<Vendedor> getSellers(){
+        List <Vendedor> vendedores = new ArrayList<>();
+        IGenericService<Vendedor> sellService = new GenericServiceImpl<>(Vendedor.class, HibernateUtil.getSessionFactory());
+        vendedores = sellService.getAll();
+        return  vendedores;
+        }
+    }
+

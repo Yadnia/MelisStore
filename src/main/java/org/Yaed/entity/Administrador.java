@@ -4,34 +4,23 @@ import jakarta.persistence.*;
 import org.apache.commons.collections4.ArrayStack;
 
 @Entity
-@Table(name = "Administradores")
-public class Administrador {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column (name = "adminId")
-    private int idAdmin;
-    @Column(name = "adNames")
+@DiscriminatorValue("Admin")
+public class Administrador extends User{
+    @Column(name = "Nombre Admin")
     private String names;
-    @Column (name = "adSurnames")
+    @Column (name = "Apellido Admin")
     private String Surnames;
-    @Column (name = "adIDE")
+    @Column (name = "Cedula Admin")
     private String IDE;
     public Administrador(){
 
     }
 
-    public Administrador(String names, String surnames, String IDE) {
+    public Administrador(String userEmail, String userPassword, String names, String surnames, String IDE) {
+        super(userEmail, userPassword);
         this.names = names;
         Surnames = surnames;
         this.IDE = IDE;
-    }
-
-    public int getIdAdmin() {
-        return idAdmin;
-    }
-
-    public void setIdAdmin(int idAdmin) {
-        this.idAdmin = idAdmin;
     }
 
     public String getNames() {
@@ -61,8 +50,8 @@ public class Administrador {
     @Override
     public String toString() {
         return "Administrador{" +
-                "idAdmin=" + idAdmin +
-                ", names='" + names + '\'' +
+                super.toString()+
+                "names='" + names + '\'' +
                 ", Surnames='" + Surnames + '\'' +
                 ", IDE='" + IDE + '\'' +
                 '}';
