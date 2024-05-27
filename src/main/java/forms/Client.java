@@ -1,11 +1,21 @@
 package forms;
 
+import org.Yaed.entity.Cliente;
+import org.Yaed.entity.User;
+import org.Yaed.services.GenericServiceImpl;
+import org.Yaed.services.IGenericService;
+import org.Yaed.util.HibernateUtil;
+import org.checkerframework.checker.index.qual.GTENegativeOne;
+import org.checkerframework.checker.units.qual.C;
+
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Client extends JInternalFrame {
 
@@ -122,14 +132,23 @@ public class Client extends JInternalFrame {
                 String name = namTxt.getText();
                 String lastN = apetxt.getText();
                 String cd = cedtxt.getText();
-
+                Cliente cliente = new Cliente(name,lastN,cd);
+                saveClient(cliente);
                 model1.addRow(new Object[]{name,lastN,cd});
             }
         });
         delBtt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                List<Cliente> clients = getClients();
                 int num = table1.getSelectedRow();
+                String namedel = (String) table1.getValueAt(num, 0);
+                for (Cliente client : clients){
+                    if (client.getNames().equalsIgnoreCase(namedel)){
+                        deleteClient(client);
+                    }
+                }
+
                 model1.removeRow(num);
             }
         });
@@ -137,10 +156,20 @@ public class Client extends JInternalFrame {
         edBtt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                List<Cliente> clients = getClients();
                 int row = table1.getSelectedRow();
                 String name = namTxt.getText();
                 String surName =apetxt.getText();
                 String IDE = cedtxt.getText();
+               String nameed = (String) table1.getValueAt(row, 0);
+                for (Cliente client :clients){
+                    if (client.getNames().equalsIgnoreCase(nameed)){
+                        client.setNames(name);
+                        client.setSurnames(surName);
+                        client.setIDE(IDE);
+                        updateClient(client);
+                    }
+                }
                 model1.setValueAt(name,row,0);
                 model1.setValueAt(surName,row,1);
                 model1.setValueAt(IDE,row,2);
@@ -189,5 +218,31 @@ public class Client extends JInternalFrame {
 
     public static Client getInstancia (){
         return null == myClient ? (new Client()) : myClient;
+    }
+    private static void saveClient (Cliente cliente){
+        IGenericService<Cliente> clientService = new GenericServiceImpl<>(Cliente.class, HibernateUtil.getSessionFactory());
+        clientService.save(cliente);
+    }
+    private void updateClient (Cliente cliente){
+        IGenericService<Cliente> clientService = new GenericServiceImpl<>(Cliente.class, HibernateUtil.getSessionFactory());
+        clientService.update(cliente);
+
+    }
+    private static void deleteClient (Cliente cliente){
+        IGenericService<Cliente> clientService = new GenericServiceImpl<>(Cliente.class, HibernateUtil.getSessionFactory());
+        clientService.delete(cliente);
+    }
+    private static List<Cliente> getClients(){
+        List<Cliente> clientes = new ArrayList<>();
+        IGenericService<Cliente> clientService = new GenericServiceImpl<>(Cliente.class, HibernateUtil.getSessionFactory());
+        clientes = clientService.getAll();
+        return clientes;
+
+    }
+    private static List <User> getUsers(){
+        List<User> users = new ArrayList<>();
+        IGenericService<User> userService = new GenericServiceImpl<>(User.class, HibernateUtil.getSessionFactory());
+        users = userService.getAll();
+        return users;
     }
 }

@@ -1,11 +1,18 @@
 package forms;
 
+import org.Yaed.entity.Producto;
+import org.Yaed.services.GenericServiceImpl;
+import org.Yaed.services.IGenericService;
+import org.Yaed.util.HibernateUtil;
+
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Product extends JInternalFrame {
 
@@ -152,32 +159,53 @@ public class Product extends JInternalFrame {
         addBtt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String name = namTxt.getText();
-                String lastN = apetxt.getText();
-                String cd = cedtxt.getText();
-                String categ = catTxt.getText();
+                String desc = namTxt.getText();
+                String color = apetxt.getText();
+                String code = cedtxt.getText();
+                String cat = catTxt.getText();
                 String size = taTxt.getText();
-                String cuant = cuanTxt.getText();
-                model1.addRow(new Object[]{name, lastN, cd,categ,size,cuant});
+                int cuant = Integer.parseInt(cuanTxt.getText());
+                model1.addRow(new Object[]{desc, color, code,cat,size,cuant});
+                Producto product = new Producto(desc,color,code,cat,size,cuant);
+                saveProduct(product);
             }
         });
         delBtt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int num = table1.getSelectedRow();
+                String desc = (String) table1.getValueAt(num,0);
+                List <Producto> products = getProducts();
+                for (Producto product : products){
+                    if (product.getDescription().equalsIgnoreCase(desc)){
+                        deleteProduct(product);
+                    }
+                }
                     model1.removeRow(num);}
         });
         edBtt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int row = table1.getSelectedRow();
+                String descr = (String) table1.getValueAt(row,0);
                 String desc = namTxt.getText();
                 String color = apetxt.getText();
                 String code = cedtxt.getText();
                 String cat = catTxt.getText();
                 String size = taTxt.getText();
-                String cuant = cuanTxt.getText();
-
+                int cuant = Integer.parseInt(cuanTxt.getText());
+                List <Producto> products = getProducts();
+                for (Producto product : products){
+                    if (product.getDescription().equalsIgnoreCase(descr)){
+                        product.setDescription(desc);
+                        product.setColor(color);
+                        product.setCode(code);
+                        product.setCate(cat);
+                        product.setSize(size);
+                        product.setStock(cuant);
+                        updateProduct(product);
+                    }
+                }
                 model1.setValueAt(desc, row, 0);
                 model1.setValueAt(color, row, 1);
                 model1.setValueAt(code, row, 2);
@@ -250,5 +278,24 @@ public class Product extends JInternalFrame {
 
     public static Product getInstancia() {
         return null == myProduct ? (new Product()) : myProduct;
+    }
+
+    private static List<Producto> getProducts(){
+        List<Producto> productos = new ArrayList<>();
+        IGenericService<Producto> productService = new GenericServiceImpl<>(Producto.class, HibernateUtil.getSessionFactory());
+        productos = productService.getAll();
+        return  productos;
+    }
+    private static void saveProduct(Producto producto){
+        IGenericService<Producto> productService = new GenericServiceImpl<>(Producto.class, HibernateUtil.getSessionFactory());
+        productService.save(producto);
+    }
+    private static void updateProduct(Producto producto){
+        IGenericService<Producto> productService = new GenericServiceImpl<>(Producto.class, HibernateUtil.getSessionFactory());
+        productService.update(producto);
+    }
+    private static void deleteProduct (Producto product){
+        IGenericService<Producto> productService = new GenericServiceImpl<>(Producto.class, HibernateUtil.getSessionFactory());
+        productService.delete(product);
     }
 }

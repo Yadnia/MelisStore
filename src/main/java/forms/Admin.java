@@ -179,25 +179,43 @@ public class Admin extends JInternalFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int num = table1.getSelectedRow();
-                model1.removeRow(num);
-                deleteAdmins(num);
+                String nameDel = (String) table1.getValueAt(num,1);
                 List<Administrador> admins = getAdmins();
+                for (Administrador admin : admins){
+                    if (admin.getNames().equalsIgnoreCase(nameDel)){
+                        deleteUser(admin);
+                        model1.removeRow(num);
+                    }
+                }
                 admins.forEach(System.out::println);
             }
         });
         edBtt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                List <Administrador> admins = getAdmins();
                 int row = table1.getSelectedRow();
+                String email = emailtxt.getText();
+                String pass = Arrays.toString(passTxt.getPassword());
                 String name = namTxt.getText();
                 String surName =apetxt.getText();
                 String IDE = cedtxt.getText();
 
+                String nameUp = (String) table1.getValueAt(row, 1);
+                for (Administrador admin : admins){
+                    if (admin.getNames().equalsIgnoreCase(nameUp)){
+                        admin.setUserEmail(email);
+                        admin.setUserPassword(pass);
+                        admin.setNames(name);
+                        admin.setSurnames(surName);
+                        admin.setIDE(IDE);
+                        updateUser(admin);
+                    }
+                }
+
                 model1.setValueAt(name,row,1);
                 model1.setValueAt(surName,row,2);
                 model1.setValueAt(IDE,row,3);
-                updateAdmins(row,name,surName,IDE);
-                List <Administrador> admins = getAdmins();
                 admins.forEach(System.out::println);
             }
         });
@@ -215,7 +233,7 @@ public class Admin extends JInternalFrame {
         panel.add(title, gbc);
 
 // Email
-        gbc.gridwidth = 1; // Reset gridwidth to 1
+        gbc.gridwidth = 1;
         gbc.gridx = 0;
         gbc.gridy = 1;
         panel.add(emailA, gbc);
@@ -247,14 +265,14 @@ public class Admin extends JInternalFrame {
         gbc.gridy = 4;
         panel.add(apeA, gbc);
         gbc.gridx = 1;
-        panel.add(apetxt, gbc); // Missing gbc in the original
+        panel.add(apetxt, gbc);
 
 // ID
         gbc.gridx = 0;
         gbc.gridy = 5;
         panel.add(cedA, gbc);
         gbc.gridx = 1;
-        panel.add(cedtxt, gbc); // Missing gbc in the original
+        panel.add(cedtxt, gbc);
 
 //
 //        JPanel panel1 = new JPanel();
@@ -306,58 +324,17 @@ public class Admin extends JInternalFrame {
         return users;
     }
     //update admins
-    private static void updateAdmins(int index, String name, String surname, String ide){
-        Transaction transaction = null;
-        List<Administrador> admins = new ArrayList<>();
-        try(Session session = HibernateUtil.getSessionFactory().openSession();) {
-            admins = session.createQuery("from Administrador", Administrador.class).list();
-            transaction = session.beginTransaction();
-            Administrador admin = admins.get(index);
-            admin.setNames(name);
-            admin.setSurnames(surname);
-            admin.setIDE(ide);
-            session.update(admin);
-            transaction.commit();
-        } catch (Exception e){
-            e.printStackTrace();
-            if (transaction != null)
-                transaction.rollback();
+        private static void updateUser(User user) {
+        IGenericService<User> userService = new GenericServiceImpl<>(User.class, HibernateUtil.getSessionFactory());
+        userService.update(user);
         }
-        }
-
         //Eliminar admins
-    private static void deleteAdmins (int index){
-        Transaction transaction = null;
-        List<Administrador> admins = new ArrayList<>();
-        try (Session session = HibernateUtil.getSessionFactory().openSession();){
-            admins = session.createQuery("from Administrador", Administrador.class).list();
-            transaction = session.beginTransaction();
-            Administrador admin = admins.get(index);
-            session.delete(admin);
-            transaction.commit();
-        } catch (Exception e){
-            e.printStackTrace();
-            if (transaction != null){
-                transaction.rollback();
-            }
-        }
+
+    private static void deleteUser (User user){
+        IGenericService<User> userService = new GenericServiceImpl<>(User.class, HibernateUtil.getSessionFactory());
+        userService.delete(user);
     }
-    private static Administrador findSpecificAdmin(int index) {
-        Transaction transaction = null;
-        Administrador admin = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            List<Administrador> admins = session.createQuery("from Administrador", Administrador.class).list();
-            admin = admins.get(index);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-        return admin;
-    }
+
 
 
 }

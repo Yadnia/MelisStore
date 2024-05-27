@@ -17,8 +17,7 @@ public class Cliente {
     @Column(name = "clIDE")
     private String IDE;
 
-    public Cliente(int clientId, String names, String surnames, String IDE) {
-        ClientId = clientId;
+    public Cliente( String names, String surnames, String IDE) {
         this.names = names;
         Surnames = surnames;
         this.IDE = IDE;
