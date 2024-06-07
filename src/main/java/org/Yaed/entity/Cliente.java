@@ -3,6 +3,8 @@ package org.Yaed.entity;
 import jakarta.persistence.*;
 import org.checkerframework.checker.units.qual.C;
 
+import java.util.List;
+
 @Entity
 @Table (name = "Clientes")
 public class Cliente {
@@ -16,6 +18,9 @@ public class Cliente {
     private String Surnames;
     @Column(name = "clIDE")
     private String IDE;
+//    @Column (name = "compras")
+//    @OneToMany
+//    private List<Compras> compras;
 
     public Cliente( String names, String surnames, String IDE) {
         this.names = names;

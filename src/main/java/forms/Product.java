@@ -68,6 +68,10 @@ public class Product extends JInternalFrame {
         cuantity.setForeground(yell);
         cuantity.setFont(font12);
         cuantity.setBounds(30, 200, 100, 30);
+        JLabel precio = new JLabel("Precio:");
+        precio.setForeground(yell);
+        precio.setFont(font12);
+        precio.setBounds(30, 200, 100, 30);
         //TEXTFIELDS ---------------------------------
         JTextField namTxt = new JTextField();
         namTxt.setOpaque(false);
@@ -111,6 +115,14 @@ public class Product extends JInternalFrame {
         cuanTxt.setForeground(yell);
         cuanTxt.setFont(font12);
         cuanTxt.setColumns(20);
+        JTextField preciotxt = new JTextField();
+        preciotxt.setOpaque(false);
+        preciotxt.setBorder(new MatteBorder(0, 0, 1, 0, yell));
+        preciotxt.setBounds(100, 200, 200, 30);
+        preciotxt.setForeground(yell);
+        preciotxt.setFont(font12);
+        preciotxt.setColumns(20);
+
                                 // BOTONES
         JButton addBtt = new JButton();
         addBtt.setText("Agregar Producto");
@@ -132,6 +144,12 @@ public class Product extends JInternalFrame {
         edBtt.setFont(font14);
         edBtt.setForeground(yell);
         delBtt.setBorder(new MatteBorder(1, 1, 1, 1, Color.WHITE));
+        JButton refresh = new JButton("Refrescar");
+        refresh.setPreferredSize(new Dimension(200,20));
+        refresh.setOpaque(false);
+        refresh.setFont(font14);
+        refresh.setForeground(yell);
+        refresh.setBorder(new MatteBorder(1,1,1,1,Color.WHITE));
 
         //TABLA
         DefaultTableModel model1 = new DefaultTableModel();
@@ -141,6 +159,7 @@ public class Product extends JInternalFrame {
         model1.addColumn("Categoria");
         model1.addColumn("Talla");
         model1.addColumn("Stock");
+        model1.addColumn("Precio");
         JTable table1 = new JTable(model1);
         table1.getTableHeader().setBackground(dk);
         table1.getTableHeader().setForeground(yell);
@@ -150,10 +169,12 @@ public class Product extends JInternalFrame {
         table1.setFont(font12);
         table1.setSelectionBackground(new Color(141, 98, 220));
         JScrollPane scrollPane = new JScrollPane(table1);
-        JPanel tablePanel = new JPanel();
+        JPanel tablePanel = new JPanel(new BorderLayout());
         tablePanel.setPreferredSize(new Dimension(600, 200));
         tablePanel.setBackground(yell);
-        tablePanel.add(scrollPane);
+        tablePanel.add(scrollPane, BorderLayout.CENTER);
+
+        addRows(model1);
         //ACTION LISTENERS
 
         addBtt.addActionListener(new ActionListener() {
@@ -164,10 +185,12 @@ public class Product extends JInternalFrame {
                 String code = cedtxt.getText();
                 String cat = catTxt.getText();
                 String size = taTxt.getText();
+                int precio = Integer.parseInt(preciotxt.getText());
                 int cuant = Integer.parseInt(cuanTxt.getText());
-                model1.addRow(new Object[]{desc, color, code,cat,size,cuant});
-                Producto product = new Producto(desc,color,code,cat,size,cuant);
+                Producto product = new Producto(desc,color,code,cat,size,cuant, precio);
                 saveProduct(product);
+                model1.setRowCount(0);
+                addRows(model1);
             }
         });
         delBtt.addActionListener(new ActionListener() {
@@ -181,7 +204,9 @@ public class Product extends JInternalFrame {
                         deleteProduct(product);
                     }
                 }
-                    model1.removeRow(num);}
+                    model1.setRowCount(0);
+                    addRows(model1);
+            }
         });
         edBtt.addActionListener(new ActionListener() {
             @Override
@@ -194,6 +219,7 @@ public class Product extends JInternalFrame {
                 String cat = catTxt.getText();
                 String size = taTxt.getText();
                 int cuant = Integer.parseInt(cuanTxt.getText());
+                int precio = Integer.parseInt(preciotxt.getText());
                 List <Producto> products = getProducts();
                 for (Producto product : products){
                     if (product.getDescription().equalsIgnoreCase(descr)){
@@ -203,20 +229,17 @@ public class Product extends JInternalFrame {
                         product.setCate(cat);
                         product.setSize(size);
                         product.setStock(cuant);
+                        product.setPrecio(precio);
                         updateProduct(product);
                     }
                 }
-                model1.setValueAt(desc, row, 0);
-                model1.setValueAt(color, row, 1);
-                model1.setValueAt(code, row, 2);
-                model1.setValueAt(cat, row, 3);
-                model1.setValueAt(size, row, 4);
-                model1.setValueAt(cuant,row,5);
+              model1.setRowCount(0);
+                addRows(model1);
             }
         });
         //PANEL PRINCIPAL
         JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(600, 210));
+        panel.setPreferredSize(new Dimension(600, 250));
         panel.setBackground(dk);
         panel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -269,6 +292,15 @@ public class Product extends JInternalFrame {
         gbc.gridx = 1;
         panel.add(cuanTxt, gbc);
 
+        gbc.gridx = 0;
+        gbc.gridy = 7;
+        panel.add(precio, gbc);
+        gbc.gridx = 1;
+        panel.add(preciotxt, gbc);
+
+        gbc.gridx = 2;
+        gbc.gridy = 5;
+        panel.add(refresh, gbc);
         add(panel, BorderLayout.NORTH);
         add(tablePanel, BorderLayout.SOUTH);
         pack();
@@ -297,5 +329,18 @@ public class Product extends JInternalFrame {
     private static void deleteProduct (Producto product){
         IGenericService<Producto> productService = new GenericServiceImpl<>(Producto.class, HibernateUtil.getSessionFactory());
         productService.delete(product);
+    }
+    private static void addRows(DefaultTableModel model){
+        List<Producto> productos = getProducts();
+        for (Producto producto: productos){
+            String desc = producto.getDescription();
+            String color = producto.getColor();
+            String code = producto.getCode();
+            String cat = producto.getCate();
+            String size = producto.getSize();
+            int cuant = producto.getStock();
+            int precio = producto.getPrecio();
+            model.addRow(new Object[]{desc, color, code,cat,size,cuant, precio});
+        }
     }
 }

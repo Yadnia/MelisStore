@@ -132,6 +132,12 @@ public class Sell extends JInternalFrame {
         edBtt.setForeground(yell);
         delBtt.setBorder(new MatteBorder(1,1,1,1,Color.WHITE));
 
+        JButton refresh = new JButton("Refrescar");
+        refresh.setPreferredSize(new Dimension(200,20));
+        refresh.setOpaque(false);
+        refresh.setFont(font14);
+        refresh.setForeground(yell);
+        refresh.setBorder(new MatteBorder(1,1,1,1,Color.WHITE));
 
         DefaultTableModel model1 = new DefaultTableModel();
         model1.addColumn("Email");
@@ -148,12 +154,12 @@ public class Sell extends JInternalFrame {
         table1.setSelectionBackground(new Color(141, 98, 220));
 
         JScrollPane scrollPane = new JScrollPane(table1);
-        JPanel tablePanel = new JPanel();
+        JPanel tablePanel = new JPanel(new BorderLayout());
         tablePanel.setPreferredSize(new Dimension(500, 200));
         tablePanel.setBackground(yell);
-        tablePanel.add(scrollPane);
+        tablePanel.add(scrollPane, BorderLayout.CENTER);
         int a = 0;
-
+        addRows(model1);
         addBtt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -164,7 +170,8 @@ public class Sell extends JInternalFrame {
                 String cd = cedtxt.getText();
                 Vendedor sell = new Vendedor(email,pass,name,lastN,cd);
                 saveSeller(sell);
-                model1.addRow(new Object[]{email,name,lastN,cd});
+                model1.setRowCount(0);
+                addRows(model1);
             }
         });
         delBtt.addActionListener(new ActionListener() {
@@ -176,7 +183,8 @@ public class Sell extends JInternalFrame {
                 for (User ses : sellers){
                     if (ses.getUserEmail().equals(emailDel)){
                         deleteUser(ses);
-                        model1.removeRow(num);
+                        model1.setRowCount(0);
+                        addRows(model1);
                     }
                 }
 
@@ -201,10 +209,8 @@ public class Sell extends JInternalFrame {
                         ses.setSurnames(surName);
                         ses.setIDE(IDE);
                         updateSeller(ses);
-                        model1.setValueAt(email,row,0);
-                        model1.setValueAt(name,row,1);
-                        model1.setValueAt(surName,row,2);
-                        model1.setValueAt(IDE, row,3);
+                     model1.setRowCount(0);
+                     addRows(model1);
                     }
                 }
             }
@@ -264,6 +270,10 @@ public class Sell extends JInternalFrame {
         gbc.gridx = 1;
         panel.add(cedtxt, gbc);
 
+        gbc.gridx = 2;
+        gbc.gridy = 5;
+        panel.add(refresh, gbc);
+
         add(panel, BorderLayout.NORTH);
         add(tablePanel, BorderLayout.SOUTH);
         pack();
@@ -297,6 +307,17 @@ public class Sell extends JInternalFrame {
         IGenericService<User> userService = new GenericServiceImpl<>(User.class, HibernateUtil.getSessionFactory());
         users = userService.getAll();
         return users;
+    }
+    private static void addRows(DefaultTableModel model)
+    {
+        List <Vendedor> vendedores = getSellers();
+        for (Vendedor vend : vendedores){
+            String email = vend.getUserEmail();
+            String name = vend.getNames();
+            String lastN = vend.getSurnames();
+            String cd = vend.getIDE();
+            model.addRow(new Object[]{email,name,lastN,cd});
+        }
     }
     }
 

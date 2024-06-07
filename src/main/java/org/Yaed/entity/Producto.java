@@ -22,17 +22,20 @@ public class Producto {
     private String size;
     @Column (name = "prodStock")
     private int stock;
+    @Column (name = "Precio")
+    private int precio;
 
     public Producto() {
     }
 
-    public Producto( String description, String color, String code, String cate, String size, int stock) {
+    public Producto( String description, String color, String code, String cate, String size, int stock, int precio) {
         this.description = description;
         this.color = color;
         this.code = code;
         this.cate = cate;
         this.size = size;
         this.stock = stock;
+        this.precio =precio;
     }
 
     public int getProductId() {
@@ -91,6 +94,14 @@ public class Producto {
         this.stock = stock;
     }
 
+    public int getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(int precio) {
+        this.precio = precio;
+    }
+
     @Override
     public String toString() {
         return "Producto{" +
@@ -99,6 +110,7 @@ public class Producto {
                 ", color='" + color + '\'' +
                 ", size='" + size + '\'' +
                 ", stock=" + stock +
+                ", precio=" +precio +
                 '}';
     }
 }

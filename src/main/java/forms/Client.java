@@ -1,5 +1,6 @@
 package forms;
 
+import org.Yaed.entity.Administrador;
 import org.Yaed.entity.Cliente;
 import org.Yaed.entity.User;
 import org.Yaed.services.GenericServiceImpl;
@@ -105,7 +106,12 @@ public class Client extends JInternalFrame {
         edBtt.setFont(font14);
         edBtt.setForeground(yell);
         delBtt.setBorder(new MatteBorder(1,1,1,1,Color.WHITE));
-
+        JButton refresh = new JButton("Refrescar");
+        refresh.setPreferredSize(new Dimension(200,20));
+        refresh.setOpaque(false);
+        refresh.setFont(font14);
+        refresh.setForeground(yell);
+        refresh.setBorder(new MatteBorder(1,1,1,1,Color.WHITE));
 
         DefaultTableModel model1 = new DefaultTableModel();
         model1.addColumn("Nombre");
@@ -121,10 +127,11 @@ public class Client extends JInternalFrame {
         table1.setSelectionBackground(new Color(141, 98, 220));
 
         JScrollPane scrollPane = new JScrollPane(table1);
-        JPanel tablePanel = new JPanel();
+        JPanel tablePanel = new JPanel(new BorderLayout());
         tablePanel.setPreferredSize(new Dimension(600, 200));
         tablePanel.setBackground(yell);
-        tablePanel.add(scrollPane);
+        tablePanel.add(scrollPane, BorderLayout.CENTER);
+        addRows(model1);
 
         addBtt.addActionListener(new ActionListener() {
             @Override
@@ -134,7 +141,8 @@ public class Client extends JInternalFrame {
                 String cd = cedtxt.getText();
                 Cliente cliente = new Cliente(name,lastN,cd);
                 saveClient(cliente);
-                model1.addRow(new Object[]{name,lastN,cd});
+                model1.setRowCount(0);
+                addRows(model1);
             }
         });
         delBtt.addActionListener(new ActionListener() {
@@ -149,7 +157,8 @@ public class Client extends JInternalFrame {
                     }
                 }
 
-                model1.removeRow(num);
+                model1.setRowCount(0);
+                addRows(model1);
             }
         });
 
@@ -170,9 +179,15 @@ public class Client extends JInternalFrame {
                         updateClient(client);
                     }
                 }
-                model1.setValueAt(name,row,0);
-                model1.setValueAt(surName,row,1);
-                model1.setValueAt(IDE,row,2);
+                model1.setRowCount(0);
+                addRows(model1);
+            }
+        });
+        refresh.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model1.setRowCount(0);
+                addRows(model1);
             }
         });
         JPanel panel = new JPanel();
@@ -210,6 +225,11 @@ public class Client extends JInternalFrame {
         gbc.gridx = 2;
         panel.add(edBtt, gbc);
 
+// Refresh Button
+        gbc.gridx = 2;
+        gbc.gridy = 5;
+        panel.add(refresh, gbc);
+
         add(panel, BorderLayout.NORTH);
         add(tablePanel, BorderLayout.SOUTH);
         pack();
@@ -244,5 +264,15 @@ public class Client extends JInternalFrame {
         IGenericService<User> userService = new GenericServiceImpl<>(User.class, HibernateUtil.getSessionFactory());
         users = userService.getAll();
         return users;
+    }
+    private static void addRows(DefaultTableModel model){
+        List<Cliente> clientes = getClients();
+        for (Cliente cliente : clientes   ){
+            String name = cliente.getNames();
+            String surName = cliente.getSurnames();
+            String IDE = cliente.getIDE();
+            model.addRow(new Object[]{name,surName,IDE});
+        }
+
     }
 }

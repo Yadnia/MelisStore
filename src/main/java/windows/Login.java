@@ -25,8 +25,10 @@ public class Login {
 
     public Login() {
         //crear el usuario
-        Administrador user = new Administrador("yadniaaa@gmail.com","P@ssw0rd!","Yadnia","Baltodano","1234567");
-        saveUser(user);
+//        Administrador user = new Administrador("yadniaaa@gmail.com","P@ssw0rd!","Yadnia","Baltodano","1234567");
+//        Administrador user2 = new Administrador("yadnia@gmail.com","P@ssw0rd!","Yadnia","Baltodano","1234567");
+//        saveUser(user);
+//        saveUser(user2);
         List<User> usuarios = getUsers();
         usuarios.forEach(System.out::println);
 
@@ -136,38 +138,38 @@ public class Login {
 
           @Override
           public void actionPerformed(ActionEvent e) {
-//          String email = emailTextF.getText();
-//          String emPtrn =
-//          "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-//          Pattern ptrn = Pattern.compile(emPtrn);
-//          Matcher mtch = ptrn.matcher(email);
-//
-//          String password = new String(passTxtF.getPassword());
-//          String passPtrn =
-//          "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$@!%&*?])[A-Za-z\\d#$@!%&*?]{8,30}$";
-//          Pattern pttn = Pattern.compile(passPtrn);
-//          Matcher match = pttn.matcher(password);
-//
-//              boolean validUser = false;
-//              for (User user: usuarios){
-//                  if (user.getUserEmail().equalsIgnoreCase(email)&& user.getUserPassword().equals(password)){
-//                      validUser = true;
-//                  }
-//              }
-//              if (mtch.matches() && match.matches()){
-//              if (validUser){
+          String email = emailTextF.getText();
+          String emPtrn =
+          "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+          Pattern ptrn = Pattern.compile(emPtrn);
+          Matcher mtch = ptrn.matcher(email);
+
+          String password = new String(passTxtF.getPassword());
+          String passPtrn =
+          "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$@!%&*?])[A-Za-z\\d#$@!%&*?]{8,30}$";
+          Pattern pttn = Pattern.compile(passPtrn);
+          Matcher match = pttn.matcher(password);
+
+              boolean validUser = false;
+              for (User user: usuarios){
+                  if (user.getUserEmail().equalsIgnoreCase(email)&& user.getUserPassword().equals(password)){
+                      validUser = true;
+                  }
+              }
+              if (mtch.matches() && match.matches()){
+              if (validUser){
                   frame1.dispose();
                   new mainPage().setVisible(true);
-//              }
-//              else {
-//                  JOptionPane.showMessageDialog(null,"Usuario no registrado");
-//              }
-//          } else {
-//          JOptionPane.showMessageDialog(null, "Correo o contraseña inválidos",
-//          "Error",JOptionPane.ERROR_MESSAGE);
-//          }
-//          }
-          }});
+              }
+              else {
+                  JOptionPane.showMessageDialog(null,"Usuario no registrado");
+              }
+          } else {
+          JOptionPane.showMessageDialog(null, "Correo o contraseña inválidos",
+          "Error",JOptionPane.ERROR_MESSAGE);
+          }
+          }
+          });
         passTxtF.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -189,17 +191,10 @@ public class Login {
         IGenericService<User> userService = new GenericServiceImpl<>(User.class, HibernateUtil.getSessionFactory());
         userService.save(user);
     }
-    private static List <User> getUsers (){
-        Transaction transaction = null;
-        List <User> users = new ArrayList<>();
-        try (Session session = HibernateUtil.getSessionFactory().openSession()){
-            users = session.createQuery("from User", User.class).list();
-        } catch (Exception e){
-            e.printStackTrace();
-            if (transaction != null){
-                transaction.rollback();
-            }
-        }
+    private static List <User> getUsers(){
+        List<User> users = new ArrayList<>();
+        IGenericService<User> userService = new GenericServiceImpl<>(User.class, HibernateUtil.getSessionFactory());
+        users = userService.getAll();
         return users;
     }
-}
+    }

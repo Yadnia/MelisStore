@@ -136,6 +136,12 @@ public class Admin extends JInternalFrame {
         edBtt.setFont(font14);
         edBtt.setForeground(yell);
         delBtt.setBorder(new MatteBorder(1,1,1,1,Color.WHITE));
+        JButton refresh = new JButton("Refrescar");
+        refresh.setPreferredSize(new Dimension(200,20));
+        refresh.setOpaque(false);
+        refresh.setFont(font14);
+        refresh.setForeground(yell);
+        refresh.setBorder(new MatteBorder(1,1,1,1,Color.WHITE));
 
 
         DefaultTableModel model1 = new DefaultTableModel();
@@ -158,6 +164,7 @@ public class Admin extends JInternalFrame {
         tablePanel.setBackground(yell);
         tablePanel.add(scrollPane);
         int a = 0;
+        addRows(model1);
         addBtt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -219,6 +226,14 @@ public class Admin extends JInternalFrame {
                 admins.forEach(System.out::println);
             }
         });
+        refresh.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model1.setRowCount(0);
+                addRows(model1);
+            }
+        });
+
         JPanel panel = new JPanel();
        panel.setPreferredSize(new Dimension(600, 210));
         panel.setBackground(dk);
@@ -274,6 +289,12 @@ public class Admin extends JInternalFrame {
         gbc.gridx = 1;
         panel.add(cedtxt, gbc);
 
+// Refresh Button
+        gbc.gridx = 2;
+        gbc.gridy = 5;
+        panel.add(refresh, gbc);
+
+
 //
 //        JPanel panel1 = new JPanel();
 //        panel1.setLayout(new BorderLayout());
@@ -291,21 +312,7 @@ public class Admin extends JInternalFrame {
     }
 
     //Agregar admin
-    private static void guardarAdmin (User administrador){
-        Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()){
-            transaction = session.beginTransaction();
-            if (administrador instanceof Administrador){
-                session.save(administrador);
-            }
-            transaction.commit();
-        } catch (Exception e){
-            e.printStackTrace();
-            if (transaction!= null){
-                transaction.rollback();
-            }
-        }
-    }
+
     private static void saveAdmin(User user){
         IGenericService<User> userService = new GenericServiceImpl<>(User.class, HibernateUtil.getSessionFactory());
         userService.save(user);
@@ -335,7 +342,17 @@ public class Admin extends JInternalFrame {
         userService.delete(user);
     }
 
+    private static void addRows(DefaultTableModel model){
+        List<Administrador> administradores = getAdmins();
+        for (Administrador admin : administradores){
+            String email = admin.getUserEmail();
+            String name = admin.getNames();
+            String surName = admin.getSurnames();
+            String IDE = admin.getIDE();
+            model.addRow(new Object[]{email,name,surName,IDE});
+        }
 
+    }
 
 }
 

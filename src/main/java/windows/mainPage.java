@@ -23,7 +23,7 @@ public class mainPage extends JFrame {
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(new Dimension(750,700));
         setLocationRelativeTo(null);
-        setResizable(true);
+        setResizable(false);
         getContentPane().setBackground(new Color(46, 21, 59));
         setLayout(new BorderLayout());
         //titulo
@@ -32,7 +32,6 @@ public class mainPage extends JFrame {
         mainPanel.setBounds(65, 100, 600, 400);
         mainPanel.setBackground(new Color(137, 109, 150));
         mainPanel.setPreferredSize(new Dimension(600,100));
-
         // MENU
 
         UIManager.put("MenuItem.selectionBackground", new Color(137, 109, 150));
