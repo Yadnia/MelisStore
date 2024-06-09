@@ -18,10 +18,6 @@ public class Cliente {
     private String Surnames;
     @Column(name = "clIDE")
     private String IDE;
-//    @Column (name = "compras")
-//    @OneToMany
-//    private List<Compras> compras;
-
     public Cliente( String names, String surnames, String IDE) {
         this.names = names;
         Surnames = surnames;
