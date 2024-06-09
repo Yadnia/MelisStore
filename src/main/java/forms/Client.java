@@ -1,13 +1,10 @@
 package forms;
 
-import org.Yaed.entity.Administrador;
 import org.Yaed.entity.Cliente;
 import org.Yaed.entity.User;
 import org.Yaed.services.GenericServiceImpl;
 import org.Yaed.services.IGenericService;
 import org.Yaed.util.HibernateUtil;
-import org.checkerframework.checker.index.qual.GTENegativeOne;
-import org.checkerframework.checker.units.qual.C;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -136,13 +133,24 @@ public class Client extends JInternalFrame {
         addBtt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String name = namTxt.getText();
-                String lastN = apetxt.getText();
-                String cd = cedtxt.getText();
-                Cliente cliente = new Cliente(name,lastN,cd);
-                saveClient(cliente);
-                model1.setRowCount(0);
-                addRows(model1);
+                String name = namTxt.getText().trim();
+                String lastN = apetxt.getText().trim();
+                String cd = cedtxt.getText().trim();
+                boolean validEntry = true;
+             if (name.isEmpty()|| lastN.isEmpty()||cd.isEmpty()){
+                 JOptionPane.showMessageDialog(null, "Por favor, rellene todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
+                 validEntry = false;
+             } else if (existentClient(cd)) {
+                 JOptionPane.showMessageDialog(null, "El cliente ya existe", "Error", JOptionPane.ERROR_MESSAGE);
+                 validEntry = false;
+             }
+             if (validEntry){
+                 Cliente cliente = new Cliente(name,lastN,cd);
+                 saveClient(cliente);
+                 addRows(model1);
+                 cleanFields(namTxt,apetxt,cedtxt);
+
+             }
             }
         });
         delBtt.addActionListener(new ActionListener() {
@@ -150,16 +158,23 @@ public class Client extends JInternalFrame {
             public void actionPerformed(ActionEvent e) {
                 List<Cliente> clients = getClients();
                 int num = table1.getSelectedRow();
-                String namedel = (String) table1.getValueAt(num, 0);
+                if (num <0){
+                    JOptionPane.showMessageDialog(null, "Seleccione una fila.", "Error", JOptionPane.ERROR_MESSAGE);
+                } else{
+                String cedDel = (String) table1.getValueAt(num, 2);
                 for (Cliente client : clients){
-                    if (client.getNames().equalsIgnoreCase(namedel)){
-                        deleteClient(client);
+                    if (client.getIDE().equalsIgnoreCase(cedDel)){
+                        int resp = JOptionPane.showConfirmDialog(null,"Eliminar registro?","Confirmar", JOptionPane.YES_NO_OPTION);
+                        if (resp == JOptionPane.YES_OPTION){
+                            deleteClient(client);
+                            addRows(model1);
+                            cleanFields(namTxt, apetxt, cedtxt);
+                        }
+
                     }
                 }
 
-                model1.setRowCount(0);
-                addRows(model1);
-            }
+            }}
         });
 
         edBtt.addActionListener(new ActionListener() {
@@ -167,26 +182,37 @@ public class Client extends JInternalFrame {
             public void actionPerformed(ActionEvent e) {
                 List<Cliente> clients = getClients();
                 int row = table1.getSelectedRow();
-                String name = namTxt.getText();
-                String surName =apetxt.getText();
-                String IDE = cedtxt.getText();
-               String nameed = (String) table1.getValueAt(row, 0);
-                for (Cliente client :clients){
-                    if (client.getNames().equalsIgnoreCase(nameed)){
-                        client.setNames(name);
-                        client.setSurnames(surName);
-                        client.setIDE(IDE);
-                        updateClient(client);
+                boolean validEntry = true;
+                if (row <0 ){
+                    JOptionPane.showMessageDialog(null, "Seleccione una fila.", "Error", JOptionPane.ERROR_MESSAGE);
+                } else  {
+                    String name = namTxt.getText().trim();
+                    String surName =apetxt.getText().trim();
+                    String IDE = cedtxt.getText().trim();
+                    String nameed = (String) table1.getValueAt(row, 0);
+                    if (name.isEmpty()|| surName.isEmpty()||IDE.isEmpty()){
+                        JOptionPane.showMessageDialog(null, "Por favor, rellene todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
+                        validEntry = false;
                     }
-                }
-                model1.setRowCount(0);
-                addRows(model1);
+                    if (validEntry){
+                    for (Cliente client :clients){
+                        if (client.getNames().equalsIgnoreCase(nameed)){
+                            client.setNames(name);
+                            client.setSurnames(surName);
+                            client.setIDE(IDE);
+                            updateClient(client);
+                            addRows(model1);
+                            cleanFields(namTxt,apetxt,cedtxt);
+                        }
+                    }
+
+                }}
+
             }
         });
         refresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                model1.setRowCount(0);
                 addRows(model1);
             }
         });
@@ -266,6 +292,7 @@ public class Client extends JInternalFrame {
         return users;
     }
     private static void addRows(DefaultTableModel model){
+        model.setRowCount(0);
         List<Cliente> clientes = getClients();
         for (Cliente cliente : clientes   ){
             String name = cliente.getNames();
@@ -274,5 +301,19 @@ public class Client extends JInternalFrame {
             model.addRow(new Object[]{name,surName,IDE});
         }
 
+    }
+    private static boolean existentClient(String cedula){
+        List<Cliente> clients = getClients();
+        for (Cliente cliente: clients){
+            if (cliente.getIDE().equalsIgnoreCase(cedula)){
+                return true;
+            }
+        }
+        return false;
+    }
+    private static void cleanFields(JTextField namTxt, JTextField apetxt, JTextField cedtxt) {
+        namTxt.setText("");
+        apetxt.setText("");
+        cedtxt.setText("");
     }
 }

@@ -1,5 +1,6 @@
 package forms;
 
+import org.Yaed.entity.Administrador;
 import org.Yaed.entity.User;
 import org.Yaed.entity.Vendedor;
 import org.Yaed.services.GenericServiceImpl;
@@ -15,6 +16,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Sell extends JInternalFrame {
 
@@ -164,55 +167,108 @@ public class Sell extends JInternalFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String email = emailtxt.getText();
-                String pass = Arrays.toString(passTxt.getPassword());
+                String password = Arrays.toString(passTxt.getPassword());
                 String name = namTxt.getText();
                 String lastN = apetxt.getText();
                 String cd = cedtxt.getText();
-                Vendedor sell = new Vendedor(email,pass,name,lastN,cd);
-                saveSeller(sell);
-                model1.setRowCount(0);
-                addRows(model1);
+                List<Vendedor> sellers = getSellers();
+                boolean validEntry = true;
+                if (email.isEmpty() || password.isEmpty() || name.isEmpty() || lastN.isEmpty() || cd.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Por favor, rellene todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
+                    validEntry = false;
+                } else {
+                    for (Vendedor vendedor : sellers) {
+                        if (existentSeller(cd, email)) {
+                            JOptionPane.showMessageDialog(null, "Vendedor ya existe", "Error", JOptionPane.ERROR_MESSAGE);
+                            validEntry = false;
+                            break;
+                        } else if (email.equalsIgnoreCase(vendedor.getUserEmail())) {
+                            JOptionPane.showMessageDialog(null, "Ese correo ya existe", "Error", JOptionPane.ERROR_MESSAGE);
+                            validEntry = false;
+                            break;
+                        } else if (!ValidUser(email, password)) {
+                            JOptionPane.showMessageDialog(null, "Por favor asegúrese de ingresar un correo y contraseña válidos.", "error", JOptionPane.ERROR_MESSAGE);
+                            validEntry =false;
+                            break;
+                        }
+                    }
+                }
+
+                if (validEntry) {
+                    Vendedor vendedor = new Vendedor(email, password, name, lastN, cd);
+                    saveSeller(vendedor);
+                    addRows(model1); //agregarlas nuevamente
+                    cleanFields(emailtxt,passTxt,namTxt,apetxt,cedtxt);
+                }
             }
         });
         delBtt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int num = table1.getSelectedRow();
-                String emailDel = (String) table1.getValueAt(num, 0);
-                List<User> sellers = getUsers();
-                for (User ses : sellers){
-                    if (ses.getUserEmail().equals(emailDel)){
-                        deleteUser(ses);
-                        model1.setRowCount(0);
-                        addRows(model1);
+                if (model1.getRowCount() == 1){
+                    JOptionPane.showMessageDialog(null, "debe existir al menos un administrador.", "Error", JOptionPane.ERROR_MESSAGE);
+                }else {
+                    if (num < 0) {
+                        JOptionPane.showMessageDialog(null, "Seleccione una fila.", "Error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        String email = (String) table1.getValueAt(num, 0);
+                        List<Vendedor> sells = getSellers();
+                        for (Vendedor vendedor : sells) {
+                            if (vendedor.getUserEmail().equalsIgnoreCase(email)) {
+                                int resp = JOptionPane.showConfirmDialog(null, "Eliminar registro?", "Confirmar borrar", JOptionPane.YES_NO_OPTION);
+                                if (resp == JOptionPane.YES_OPTION) {
+                                    deleteUser(vendedor);
+                                    addRows(model1);
+                                    cleanFields(emailtxt,passTxt,namTxt,apetxt,cedtxt);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }}
+        });
+        edBtt.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List<Vendedor> vends = getSellers();
+                int row = table1.getSelectedRow();
+                if (row < 0) {
+                    JOptionPane.showMessageDialog(null, "Seleccione una fila.", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    String email = emailtxt.getText();
+                    String pass = String.valueOf(passTxt.getPassword());
+                    String name = namTxt.getText();
+                    String surName = apetxt.getText();
+                    String IDE = cedtxt.getText();
+                    String nameUp = (String) table1.getValueAt(row, 1);
+                    if (!email.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "No se puede editar el email.", "Error", JOptionPane.ERROR_MESSAGE);
+                    } else if (existentSeller(IDE, email)) {
+                        JOptionPane.showMessageDialog(null, "Ese administrador ya existe.", "error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        for (Vendedor vendedor : vends) {
+                            if (vendedor.getNames().equalsIgnoreCase(nameUp)) {
+                                vendedor.setUserEmail(email);
+                                vendedor.setUserPassword(pass);
+                                vendedor.setNames(name);
+                                vendedor.setSurnames(surName);
+                                vendedor.setIDE(IDE);
+                                updateSeller(vendedor);
+                                addRows(model1);
+                                cleanFields(emailtxt, passTxt, namTxt, apetxt, cedtxt);
+                            }
+                        }
                     }
                 }
 
             }
         });
-        edBtt.addActionListener(new ActionListener() {
+        refresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int row = table1.getSelectedRow();
-                String emaDel = (String) table1.getValueAt(row, 0);
-                List<Vendedor> sellers = getSellers();
-                String email = emailtxt.getText();
-                String pass = Arrays.toString(passTxt.getPassword());
-                String name = namTxt.getText();
-                String surName =apetxt.getText();
-                String IDE = cedtxt.getText();
-                for (Vendedor ses : sellers){
-                    if (ses.getUserEmail().equals(emaDel)){
-                        ses.setUserEmail(email);
-                        ses.setUserPassword(pass);
-                        ses.setNames(name);
-                        ses.setSurnames(surName);
-                        ses.setIDE(IDE);
-                        updateSeller(ses);
-                     model1.setRowCount(0);
-                     addRows(model1);
-                    }
-                }
+                addRows(model1);
+                cleanFields(emailtxt, passTxt, namTxt, apetxt, cedtxt);
             }
         });
         JPanel panel = new JPanel();
@@ -310,6 +366,7 @@ public class Sell extends JInternalFrame {
     }
     private static void addRows(DefaultTableModel model)
     {
+        model.setRowCount(0);
         List <Vendedor> vendedores = getSellers();
         for (Vendedor vend : vendedores){
             String email = vend.getUserEmail();
@@ -318,6 +375,36 @@ public class Sell extends JInternalFrame {
             String cd = vend.getIDE();
             model.addRow(new Object[]{email,name,lastN,cd});
         }
+    }
+    private static boolean existentSeller(String cedula, String email){
+        List<Vendedor> vends = getSellers();
+        for (Vendedor vendedor: vends){
+            if (vendedor.getIDE().equalsIgnoreCase(cedula) || vendedor.getUserEmail().equalsIgnoreCase(email)){
+                return true;
+            }
+        }
+        return false;
+    }
+    private static boolean ValidUser (String email, String password){
+        String emPtrn =
+                "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        Pattern ptrn = Pattern.compile(emPtrn);
+        Matcher mtch = ptrn.matcher(email);
+        String passPtrn =
+                "^.{8,}$";
+        Pattern pttn = Pattern.compile(passPtrn);
+        Matcher match = pttn.matcher(password);
+        if (mtch.matches() && match.matches()){
+            return true;
+        }
+        return false;
+    }
+    private static void cleanFields(JTextField emailtxt, JPasswordField passTxt, JTextField namTxt, JTextField apetxt, JTextField cedtxt) {
+        emailtxt.setText("");
+        passTxt.setText("");
+        namTxt.setText("");
+        apetxt.setText("");
+        cedtxt.setText("");
     }
     }
 

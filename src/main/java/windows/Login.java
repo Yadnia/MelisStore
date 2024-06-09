@@ -6,6 +6,7 @@ import org.Yaed.entity.User;
 import org.Yaed.services.GenericServiceImpl;
 import org.Yaed.services.IGenericService;
 import org.Yaed.util.HibernateUtil;
+import org.checkerframework.checker.units.qual.A;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -25,13 +26,13 @@ public class Login {
 
     public Login() {
         //crear el usuario
-//        Administrador user = new Administrador("yadniaaa@gmail.com","P@ssw0rd!","Yadnia","Baltodano","1234567");
-//        Administrador user2 = new Administrador("yadnia@gmail.com","P@ssw0rd!","Yadnia","Baltodano","1234567");
-//        saveUser(user);
-//        saveUser(user2);
         List<User> usuarios = getUsers();
         usuarios.forEach(System.out::println);
-
+        List<Administrador> admins = getAdmins();
+        if (admins.isEmpty()) {
+            Administrador user2 = new Administrador("root@gmail.com","12345678","Yadnia","Baltodano","1234567");
+             saveUser(user2);
+        }
         URL rutaimg = App.class.getResource("/IconLogin.png");
         ImageIcon iconImg = new ImageIcon(rutaimg);
         frame1.setIconImage(iconImg.getImage());
@@ -138,38 +139,22 @@ public class Login {
 
           @Override
           public void actionPerformed(ActionEvent e) {
-          String email = emailTextF.getText();
-          String emPtrn =
-          "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-          Pattern ptrn = Pattern.compile(emPtrn);
-          Matcher mtch = ptrn.matcher(email);
-
-          String password = new String(passTxtF.getPassword());
-          String passPtrn =
-          "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$@!%&*?])[A-Za-z\\d#$@!%&*?]{8,30}$";
-          Pattern pttn = Pattern.compile(passPtrn);
-          Matcher match = pttn.matcher(password);
-
-              boolean validUser = false;
-              for (User user: usuarios){
-                  if (user.getUserEmail().equalsIgnoreCase(email)&& user.getUserPassword().equals(password)){
-                      validUser = true;
+              String email = emailTextF.getText();
+              String password = new String(passTxtF.getPassword());
+              if (ValidUser(email, password)){
+                  if (existentUser(email,password)){
+                      frame1.dispose();
+                      new mainPage().setVisible(true);
+                  } else{
+                      JOptionPane.showMessageDialog(null,"Usuario no registrado");
                   }
+
+              } else {
+                  JOptionPane.showMessageDialog(null, "Correo o contraseña inválidos",
+                    "Error",JOptionPane.ERROR_MESSAGE);
               }
-              if (mtch.matches() && match.matches()){
-              if (validUser){
-                  frame1.dispose();
-                  new mainPage().setVisible(true);
-              }
-              else {
-                  JOptionPane.showMessageDialog(null,"Usuario no registrado");
-              }
-          } else {
-          JOptionPane.showMessageDialog(null, "Correo o contraseña inválidos",
-          "Error",JOptionPane.ERROR_MESSAGE);
-          }
-          }
-          });
+
+          }});
         passTxtF.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -197,4 +182,33 @@ public class Login {
         users = userService.getAll();
         return users;
     }
+    private static boolean ValidUser (String email, String password){
+        String emPtrn =
+                "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        Pattern ptrn = Pattern.compile(emPtrn);
+        Matcher mtch = ptrn.matcher(email);
+        String passPtrn =
+                "^.{8,}$";
+        Pattern pttn = Pattern.compile(passPtrn);
+        Matcher match = pttn.matcher(password);
+        if (mtch.matches() && match.matches()){
+            return true;
+        }
+        return false;
     }
+    private static boolean existentUser(String email, String password){
+        List<User> usuarios = getUsers();
+        for (User user: usuarios){
+            if (user.getUserEmail().equalsIgnoreCase(email)&& user.getUserPassword().equals(password)){
+                return true;
+            }
+        }
+        return false;
+    }
+    private static List<Administrador> getAdmins() {
+        List<Administrador> admins = new ArrayList<>();
+        IGenericService<Administrador> adminService = new GenericServiceImpl<>(Administrador.class, HibernateUtil.getSessionFactory());
+        admins = adminService.getAll();
+        return admins;
+    }
+}

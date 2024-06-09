@@ -1,5 +1,6 @@
 package forms;
 
+import jakarta.persistence.JoinColumn;
 import org.Yaed.entity.Producto;
 import org.Yaed.services.GenericServiceImpl;
 import org.Yaed.services.IGenericService;
@@ -123,7 +124,7 @@ public class Product extends JInternalFrame {
         preciotxt.setFont(font12);
         preciotxt.setColumns(20);
 
-                                // BOTONES
+        // BOTONES
         JButton addBtt = new JButton();
         addBtt.setText("Agregar Producto");
         addBtt.setOpaque(false);
@@ -145,11 +146,11 @@ public class Product extends JInternalFrame {
         edBtt.setForeground(yell);
         delBtt.setBorder(new MatteBorder(1, 1, 1, 1, Color.WHITE));
         JButton refresh = new JButton("Refrescar");
-        refresh.setPreferredSize(new Dimension(200,20));
+        refresh.setPreferredSize(new Dimension(200, 20));
         refresh.setOpaque(false);
         refresh.setFont(font14);
         refresh.setForeground(yell);
-        refresh.setBorder(new MatteBorder(1,1,1,1,Color.WHITE));
+        refresh.setBorder(new MatteBorder(1, 1, 1, 1, Color.WHITE));
 
         //TABLA
         DefaultTableModel model1 = new DefaultTableModel();
@@ -180,49 +181,95 @@ public class Product extends JInternalFrame {
         addBtt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String desc = namTxt.getText();
-                String color = apetxt.getText();
-                String code = cedtxt.getText();
-                String cat = catTxt.getText();
-                String size = taTxt.getText();
-                int precio = Integer.parseInt(preciotxt.getText());
-                int cuant = Integer.parseInt(cuanTxt.getText());
-                Producto product = new Producto(desc,color,code,cat,size,cuant, precio);
-                saveProduct(product);
-                model1.setRowCount(0);
-                addRows(model1);
+                String desc = namTxt.getText().trim();
+                String color = apetxt.getText().trim();
+                String code = cedtxt.getText().trim();
+                String cat = catTxt.getText().trim();
+                String size = taTxt.getText().trim();
+                int cuant = 0;
+                int precio = 0;
+                boolean validEntry = true;
+                try {
+                    precio = Integer.parseInt(preciotxt.getText());
+                    cuant = Integer.parseInt(cuanTxt.getText());
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Los campos de precio y cantidad deben ser números.", "Error", JOptionPane.ERROR_MESSAGE);
+                    validEntry = false;
+                }
+
+                if (desc.isEmpty() || color.isEmpty() || code.isEmpty() || cat.isEmpty() || size.isEmpty() || precio < 0 || cuant < 0) {
+                    JOptionPane.showMessageDialog(null, "Por favor, rellene todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
+                    validEntry = false;
+                } else {
+                    List<Producto> prods = getProducts();
+                    for (Producto producto : prods) {
+                        if (producto.getCode().equalsIgnoreCase(code)) {
+                            JOptionPane.showMessageDialog(null, "Ese producto ya existe.", "Error", JOptionPane.ERROR_MESSAGE);
+                            validEntry = false;
+                        }
+                    }
+
+                }
+                if (validEntry) {
+                    Producto product = new Producto(desc, color, code, cat, size, cuant, precio);
+                    saveProduct(product);
+                    addRows(model1);
+                    cleanFields(namTxt, apetxt, cedtxt, catTxt, taTxt, preciotxt, cuanTxt);
+                }
             }
         });
         delBtt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                List<Producto> products = getProducts(); // Obtener la lista actualizada de productos
                 int num = table1.getSelectedRow();
-                String desc = (String) table1.getValueAt(num,0);
-                List <Producto> products = getProducts();
-                for (Producto product : products){
-                    if (product.getDescription().equalsIgnoreCase(desc)){
-                        deleteProduct(product);
+                if (num < 0) {
+                    JOptionPane.showMessageDialog(null, "Seleccione una fila.", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    String codeDeL = (String) table1.getValueAt(num, 2);
+                    for (Producto product : products) {
+                        if (product.getCode().equalsIgnoreCase(codeDeL)) {
+                            String[] eliminar = {"Restar", "Eliminar definitivamente"};
+                            int resp = JOptionPane.showOptionDialog(null, "Restar cantidad o eliminar definitivamente?", "Confirmar", 0, 3, null, eliminar, null);
+                            if (resp == 0) {
+                                int stockActual = product.getStock();
+                                if (stockActual <= 0){
+                                    JOptionPane.showMessageDialog(null,"Cantidad minima alcanzada.");
+                                } else {
+                                product.setStock(stockActual -1);
+                                updateProduct(product);
+                                addRows(model1);}
+                            } else if (resp == 1) { // Eliminar definitivamente
+                                deleteProduct(product);
+                                addRows(model1); // Actualizar tabla después de eliminar producto
+                                cleanFields(namTxt, apetxt, cedtxt, catTxt, taTxt, preciotxt, cuanTxt);
+                            }
+                            break;
+                        }
                     }
                 }
-                    model1.setRowCount(0);
-                    addRows(model1);
             }
         });
+
         edBtt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int row = table1.getSelectedRow();
-                String descr = (String) table1.getValueAt(row,0);
-                String desc = namTxt.getText();
-                String color = apetxt.getText();
-                String code = cedtxt.getText();
-                String cat = catTxt.getText();
-                String size = taTxt.getText();
+                if (row <0) {
+                    JOptionPane.showMessageDialog(null, "Seleccione una fila", "Error", JOptionPane.ERROR_MESSAGE);
+                }else{
+                String codeEd = (String) table1.getValueAt(row, 2);
+                String desc = namTxt.getText().trim();
+                String color = apetxt.getText().trim();
+                String code = cedtxt.getText().trim();
+                String cat = catTxt.getText().trim();
+                String size = taTxt.getText().trim();
                 int cuant = Integer.parseInt(cuanTxt.getText());
                 int precio = Integer.parseInt(preciotxt.getText());
-                List <Producto> products = getProducts();
-                for (Producto product : products){
-                    if (product.getDescription().equalsIgnoreCase(descr)){
+
+                List<Producto> products = getProducts();
+                for (Producto product : products) {
+                    if (product.getCode().equalsIgnoreCase(codeEd)) {
                         product.setDescription(desc);
                         product.setColor(color);
                         product.setCode(code);
@@ -231,10 +278,18 @@ public class Product extends JInternalFrame {
                         product.setStock(cuant);
                         product.setPrecio(precio);
                         updateProduct(product);
+                        addRows(model1);
+                        cleanFields(namTxt, apetxt, cedtxt, catTxt, taTxt, preciotxt, cuanTxt);
                     }
-                }
-              model1.setRowCount(0);
+                }}
+            }
+        });
+
+        refresh.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 addRows(model1);
+                cleanFields(namTxt, apetxt, cedtxt, catTxt, taTxt, preciotxt, cuanTxt);
             }
         });
         //PANEL PRINCIPAL
@@ -312,27 +367,32 @@ public class Product extends JInternalFrame {
         return null == myProduct ? (new Product()) : myProduct;
     }
 
-    private static List<Producto> getProducts(){
+    private static List<Producto> getProducts() {
         List<Producto> productos = new ArrayList<>();
         IGenericService<Producto> productService = new GenericServiceImpl<>(Producto.class, HibernateUtil.getSessionFactory());
         productos = productService.getAll();
-        return  productos;
+        return productos;
     }
-    private static void saveProduct(Producto producto){
+
+    private static void saveProduct(Producto producto) {
         IGenericService<Producto> productService = new GenericServiceImpl<>(Producto.class, HibernateUtil.getSessionFactory());
         productService.save(producto);
     }
-    private static void updateProduct(Producto producto){
+
+    private static void updateProduct(Producto producto) {
         IGenericService<Producto> productService = new GenericServiceImpl<>(Producto.class, HibernateUtil.getSessionFactory());
         productService.update(producto);
     }
-    private static void deleteProduct (Producto product){
+
+    private static void deleteProduct(Producto product) {
         IGenericService<Producto> productService = new GenericServiceImpl<>(Producto.class, HibernateUtil.getSessionFactory());
         productService.delete(product);
     }
-    private static void addRows(DefaultTableModel model){
+
+    private static void addRows(DefaultTableModel model) {
+        model.setRowCount(0);
         List<Producto> productos = getProducts();
-        for (Producto producto: productos){
+        for (Producto producto : productos) {
             String desc = producto.getDescription();
             String color = producto.getColor();
             String code = producto.getCode();
@@ -340,7 +400,17 @@ public class Product extends JInternalFrame {
             String size = producto.getSize();
             int cuant = producto.getStock();
             int precio = producto.getPrecio();
-            model.addRow(new Object[]{desc, color, code,cat,size,cuant, precio});
+            model.addRow(new Object[]{desc, color, code, cat, size, cuant, precio});
         }
+    }
+
+    private static void cleanFields(JTextField emailtxt, JTextField passTxt, JTextField namTxt, JTextField apetxt, JTextField cedtxt, JTextField num6, JTextField num7) {
+        emailtxt.setText("");
+        passTxt.setText("");
+        namTxt.setText("");
+        apetxt.setText("");
+        cedtxt.setText("");
+        num6.setText("");
+        num7.setText("");
     }
 }
