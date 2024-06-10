@@ -167,7 +167,7 @@ public class Sell extends JInternalFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String email = emailtxt.getText();
-                String password = Arrays.toString(passTxt.getPassword());
+                String password = String.valueOf( passTxt.getPassword());
                 String name = namTxt.getText();
                 String lastN = apetxt.getText();
                 String cd = cedtxt.getText();
@@ -175,6 +175,9 @@ public class Sell extends JInternalFrame {
                 boolean validEntry = true;
                 if (email.isEmpty() || password.isEmpty() || name.isEmpty() || lastN.isEmpty() || cd.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Por favor, rellene todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
+                    validEntry = false;
+                } else  if (!numeros(namTxt) || !numeros(apetxt)) {
+                    JOptionPane.showMessageDialog(null, "Solo se admiten numeros");
                     validEntry = false;
                 } else {
                     for (Vendedor vendedor : sellers) {
@@ -406,6 +409,14 @@ public class Sell extends JInternalFrame {
         namTxt.setText("");
         apetxt.setText("");
         cedtxt.setText("");
+    }
+    private static boolean numeros(JTextField textField){
+        String input = textField.getText();
+        if (input.matches(".*\\d.*")) {
+            textField.setText("");
+            return true;
+        }
+        return false;
     }
     }
 

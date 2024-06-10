@@ -175,8 +175,14 @@ public class Factura extends JInternalFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Producto producto = (Producto) comboBox.getSelectedItem();
+                if (producto.getStock()<=0){
+                    JOptionPane.showMessageDialog(null, "No hay disponible en inventario");
+                } else{
+                                producto.setStock(producto.getStock()-1);
+                            updateProduct(producto);
                 model3.addElement(producto);
-            }
+
+            }}
         });
 
         delete.addActionListener(new ActionListener() {
@@ -229,9 +235,9 @@ public class Factura extends JInternalFrame {
         refresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               // updProdCombo(model);
-                //upVendCombo(model1);
-              //  upClCombo(model2);
+               updProdCombo(comboBox);
+                upVendCombo(vendCombo);
+               upClCombo(clienteCombo);
             }
         });
         fact.addActionListener(new ActionListener() {
@@ -255,7 +261,26 @@ public class Factura extends JInternalFrame {
                         productosVenta.add((long) id);
                     }
                 } venta.setProductos(productosVenta);
+                    //reducir stock
+                int j = 0;
+                List<Producto> producto1s = getProducts();
 
+                for (int i = 0; i < model3.size(); i++) {
+                    Object el = model3.getElementAt(i);
+                    if (el != null && el instanceof Producto) { // Verifica que el elemento sea un Producto
+                        Producto producto = (Producto) el;
+                        int id = producto.getProductId();
+                        int codeSear = Integer.parseInt(producto.getCode());
+
+                        for (Producto prod : producto1s) {
+                            if (prod.getCode().equalsIgnoreCase(String.valueOf(codeSear))) {
+                                prod.setStock(prod.getStock() - 1);
+                            }
+                        }
+
+                        productosVenta.add((long) id);
+                    }
+                }
                 //Agregar vendedor
               Vendedor vendedor = (Vendedor) vendCombo.getSelectedItem();
               venta.setVendedor(vendedor);
@@ -265,6 +290,7 @@ public class Factura extends JInternalFrame {
                 LocalDate fechaVenta = LocalDate.now();
                 venta.setFecha(fechaVenta);
                 saveVenta(venta);
+                model3.removeAllElements();
             }
         });
 
@@ -376,34 +402,36 @@ public class Factura extends JInternalFrame {
 
     }
 
-    private static void updProdCombo(DefaultComboBoxModel<String> model) {
-        model.removeAllElements();
+    private static void updProdCombo(JComboBox comboBox) {
+        comboBox.removeAllItems();
         List<Producto> productos = getProducts();
         for (Producto producto : productos) {
-            String selProd = producto.getDescription() + "- Precio: " + producto.getPrecio();
-            model.addElement(selProd);
+            comboBox.addItem(producto);
         }
     }
 
-    private static void upVendCombo(DefaultComboBoxModel<String> model) {
-        model.removeAllElements();
+    private static void upVendCombo(JComboBox comboBox) {
+        comboBox.removeAllItems();
         List<Vendedor> vendedores = getSellers();
-        for (Vendedor vendedor : vendedores) {
-            String selVend = vendedor.getNames() + " " + vendedor.getSurnames();
-            model.addElement(selVend);
+        for (Vendedor vendedor : vendedores){
+            comboBox.addItem(vendedor);
         }
     }
 
-    private static void upClCombo(DefaultComboBoxModel<String> model) {
-        model.removeAllElements();
+    private static void upClCombo(JComboBox comboBox) {
+        comboBox.removeAllItems();
         List<Cliente> clientes = getClients();
-        for (Cliente cliente : clientes) {
-            String selCl = cliente.getNames() + " " + cliente.getSurnames();
-            model.addElement(selCl);
+        for (Cliente cliente : clientes){
+            comboBox.addItem(cliente);
         }
     }
     private static void saveVenta(Ventas venta) {
         IGenericService<Ventas> productService = new GenericServiceImpl<>(Ventas.class, HibernateUtil.getSessionFactory());
         productService.save(venta);
     }
+    private static void updateProduct(Producto producto) {
+        IGenericService<Producto> productService = new GenericServiceImpl<>(Producto.class, HibernateUtil.getSessionFactory());
+        productService.update(producto);
+    }
+
 }

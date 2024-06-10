@@ -140,6 +140,9 @@ public class Client extends JInternalFrame {
              if (name.isEmpty()|| lastN.isEmpty()||cd.isEmpty()){
                  JOptionPane.showMessageDialog(null, "Por favor, rellene todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
                  validEntry = false;
+             } else if (!numeros(namTxt) || !numeros(apetxt)) {
+                 JOptionPane.showMessageDialog(null, "Solo se admiten numeros");
+                 validEntry = false;
              } else if (existentClient(cd)) {
                  JOptionPane.showMessageDialog(null, "El cliente ya existe", "Error", JOptionPane.ERROR_MESSAGE);
                  validEntry = false;
@@ -315,5 +318,13 @@ public class Client extends JInternalFrame {
         namTxt.setText("");
         apetxt.setText("");
         cedtxt.setText("");
+    }
+    private static boolean numeros(JTextField textField){
+        String input = textField.getText();
+        if (input.matches(".*\\d.*")) {
+            textField.setText("");
+            return true;
+        }
+        return false;
     }
 }

@@ -13,7 +13,7 @@ import java.net.URL;
 public class mainPage extends JFrame {
 
     public static JDesktopPane desktopPane;
-
+    boolean allGranted =Login.isAllGranted();
 
     public mainPage() {
         desktopPane = new JDesktopPane();
@@ -100,8 +100,8 @@ public class mainPage extends JFrame {
         admin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addWindow(Admin.getInstancia());
-                setVisible(true);
+                   addWindow(Admin.getInstancia());
+                   setVisible(true);
             }
         });
         // -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -113,8 +113,8 @@ public class mainPage extends JFrame {
 sell.addActionListener(new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
-        addWindow((Sell.getInstancia()));
-        setVisible(true);
+            addWindow(Sell.getInstancia());
+            setVisible(true);
     }
 });
 
@@ -152,11 +152,11 @@ sell.addActionListener(new ActionListener() {
         secMenu.setPreferredSize(new Dimension(200, 30));
 
         JMenu search = new JMenu("Acerca de...");
-        JMenuItem cSrc = new JMenuItem("Acerca de");
+        JMenuItem cSrc = new JMenuItem("Ventas del dia");
         cSrc.setForeground(Color.white);
 //        cSrc.addActionListener(cliSr);
         cSrc.setBackground(new Color(46, 21, 59));
-        JMenuItem pdRrc = new JMenuItem("Ayuda");
+        JMenuItem pdRrc = new JMenuItem("Ventas");
         pdRrc.setBackground(new Color(46, 21, 59));
         pdRrc.setForeground(Color.white);
         pdRrc.addActionListener(new ActionListener() {
@@ -221,7 +221,6 @@ sell.addActionListener(new ActionListener() {
         add(mainPanel, BorderLayout.NORTH);
 
         setVisible(true);
-
     }
     public static void addWindow(JInternalFrame ventanaInterna){
         desktopPane.add(ventanaInterna);
@@ -263,12 +262,12 @@ sell.addActionListener(new ActionListener() {
                     String action = (String) getValue(NAME);
                     switch (action){
                         case "Agregar Admin" ->{
-                            addWindow(Admin.getInstancia());
-                            setVisible(true);
+                                addWindow(Admin.getInstancia());
+                                setVisible(true);
                         }
                         case "Agregar Vendedor" ->{
-                            addWindow(Sell.getInstancia());
-                            setVisible(true);
+                                addWindow(Sell.getInstancia());
+                                setVisible(true);
                         }
                         case "Agregar Cliente" ->{
                             addWindow(Client.getInstancia());

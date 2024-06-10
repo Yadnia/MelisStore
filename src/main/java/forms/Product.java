@@ -413,4 +413,12 @@ public class Product extends JInternalFrame {
         num6.setText("");
         num7.setText("");
     }
+    private static boolean numeros(JTextField textField){
+        String input = textField.getText();
+        if (input.matches(".*\\d.*")) {
+            textField.setText("");
+            return true;
+        }
+        return false;
+    }
 }

@@ -97,6 +97,7 @@ public class Admin extends JInternalFrame {
         namTxt.setFont(font12);
         namTxt.setColumns(20);
 
+
         JTextField apetxt = new JTextField();
         apetxt.setOpaque(false);
         apetxt.setBorder(new MatteBorder(0, 0, 1, 0, yell));
@@ -175,7 +176,11 @@ public class Admin extends JInternalFrame {
                 if (email.isEmpty() || password.isEmpty() || name.isEmpty() || lastN.isEmpty() || cd.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Por favor, rellene todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
                     validEntry = false;
-                } else {
+                } else if (!numeros(namTxt) || !numeros(apetxt)) {
+                    JOptionPane.showMessageDialog(null, "Solo se admiten numeros");
+                    validEntry = false;
+                } else
+                {
                     for (Administrador admin : admins) {
                         if (existentAdmin(cd, email)) {
                             JOptionPane.showMessageDialog(null, "Administrador ya existe", "Error", JOptionPane.ERROR_MESSAGE);
@@ -245,7 +250,9 @@ public class Admin extends JInternalFrame {
                             JOptionPane.showMessageDialog(null, "No se puede editar el email.", "Error", JOptionPane.ERROR_MESSAGE);
                         } else if (existentAdmin(IDE, email)) {
                             JOptionPane.showMessageDialog(null, "Ese administrador ya existe.", "error", JOptionPane.ERROR_MESSAGE);
-                        } else {
+                        } else if (!numeros(namTxt) || !numeros(apetxt)) {
+                            JOptionPane.showMessageDialog(null, "Solo se admiten numeros");
+                        } else{
                             for (Administrador admin : admins) {
                                 if (admin.getNames().equalsIgnoreCase(nameUp)) {
                                     admin.setUserEmail(email);
@@ -421,6 +428,14 @@ public class Admin extends JInternalFrame {
             if (admin.getIDE().equalsIgnoreCase(cedula) || admin.getUserEmail().equalsIgnoreCase(email)){
                 return true;
             }
+        }
+        return false;
+    }
+    private static boolean numeros(JTextField textField){
+        String input = textField.getText();
+        if (input.matches(".*\\d.*")) {
+            textField.setText("");
+            return true;
         }
         return false;
     }

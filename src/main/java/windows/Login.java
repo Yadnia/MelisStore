@@ -22,6 +22,16 @@ import java.util.regex.Pattern;
 
 public class Login {
 
+    private static boolean allGranted; // Cambiado a una variable de instancia
+
+    public static boolean isAllGranted(){
+        return allGranted;
+    }
+
+    public void setAllGranted(boolean allGranted) {
+        this.allGranted = allGranted;
+    }
+
     JFrame frame1 = new JFrame();
 
     public Login() {
