@@ -51,7 +51,7 @@ public class Vendedor extends User{
     @Override
     public String toString() {
         return "Vendedor{" +
-              super.toString()+
+                super.toString()+
                 ", names='" + names + '\'' +
                 ", Surnames='" + Surnames + '\'' +
                 ", IDE='" + IDE + '\'' +

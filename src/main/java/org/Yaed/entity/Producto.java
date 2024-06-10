@@ -1,49 +1,62 @@
 package org.Yaed.entity;
 
 import jakarta.persistence.*;
-import org.checkerframework.checker.units.qual.C;
 
 @Entity
 @Table(name = "Productos")
 public class Producto {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column (name = "ProdId")
-    private int ProductId;
-    @Column (name = "prodDesc")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "prod_id")
+    private int productId;
+
+    @Column(name = "prod_desc")
     private String description;
-    @Column (name = "prodColor")
+
+    @Column(name = "prod_color")
     private String color;
-    @Column (name = "prod Code")
+
+    @Column(name = "prod_code")
     private String code;
-    @Column (name = "categoria")
+
+    @Column(name = "categoria")
     private String cate;
-    @Column (name = "prodSize")
+
+    @Column(name = "prod_size")
     private String size;
-    @Column (name = "prodStock")
+
+    @Column(name = "prod_stock")
     private int stock;
-    @Column (name = "Precio")
+
+    @Column(name = "precio")
     private int precio;
 
+    // Default constructor
     public Producto() {
     }
 
-    public Producto( String description, String color, String code, String cate, String size, int stock, int precio) {
+    // Parameterized constructor
+    public Producto(String description, String color, String code, String cate, String size, int stock, int precio) {
         this.description = description;
         this.color = color;
         this.code = code;
         this.cate = cate;
         this.size = size;
         this.stock = stock;
-        this.precio =precio;
+        this.precio = precio;
     }
 
+    public Producto(String description) {
+        this.description = description;
+    }
+
+    // Getters and setters
     public int getProductId() {
-        return ProductId;
+        return productId;
     }
 
     public void setProductId(int productId) {
-        ProductId = productId;
+        this.productId = productId;
     }
 
     public String getDescription() {
@@ -105,12 +118,14 @@ public class Producto {
     @Override
     public String toString() {
         return "Producto{" +
-                "ProductId=" + ProductId +
+                "productId=" + productId +
                 ", description='" + description + '\'' +
                 ", color='" + color + '\'' +
+                ", code='" + code + '\'' +
+                ", cate='" + cate + '\'' +
                 ", size='" + size + '\'' +
                 ", stock=" + stock +
-                ", precio=" +precio +
+                ", precio=" + precio +
                 '}';
     }
 }

@@ -336,6 +336,7 @@ public class Sell extends JInternalFrame {
         setVisible(true);
 
     }
+
     public static Sell getInstancia(){
         return null == mySell ? (new Sell()): mySell;
     }

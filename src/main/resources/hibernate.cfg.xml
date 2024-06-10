@@ -7,7 +7,7 @@
         <property name="connection.url">jdbc:mariadb://localhost:3306/pruebamelis</property>
         <property name="connection.username">root</property>
         <property name="connection.password">alatus</property>
-        <property name="connection.pool_size">1</property>
+        <property name="connection.pool_size">6</property>
         <property name="dialect">org.hibernate.dialect.MariaDBDialect</property>
         <property name="show_sql">true</property>
         <property name="current_session_context_class">thread</property>
@@ -17,7 +17,6 @@
         <mapping class="org.Yaed.entity.Producto"></mapping>
         <mapping class="org.Yaed.entity.Cliente"></mapping>
         <mapping class="org.Yaed.entity.Vendedor"></mapping>
-        <mapping class="org.Yaed.entity.Compras"></mapping>
         <mapping class="org.Yaed.entity.Ventas"></mapping>
     </session-factory>
 </hibernate-configuration>
