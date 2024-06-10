@@ -243,33 +243,22 @@ public class Factura extends JInternalFrame {
                 List<Long> productosVenta = new ArrayList<>();
                 Ventas venta = new Ventas();
                 //Agregar cliente
-                String clientToSearch = (String) clienteCombo.getSelectedItem();
-                for (Cliente cliente : clientes){
-                 String fullname = cliente.getNames() + " " + cliente.getSurnames();
-                    if (fullname.equalsIgnoreCase(clientToSearch)){
-                        venta.setCliente(cliente);
-                    }
-                }
+                Cliente cliente = (Cliente) clienteCombo.getSelectedItem();
+                venta.setCliente(cliente);
+
 //                //Agregar los productos
-//                for (int i = 0; i < model3.size(); i++){
-//                    String descBef = model3.get(i);
-//                    String [] parts = descBef.split("- Precio: ");
-//                    for (Producto producto: productos){
-//                        if (producto.getDescription().equalsIgnoreCase(parts[0])){
-//                            Long id = (long) producto.getProductId();
-//                            productosVenta.add(id);
-//                            venta.setProductos(productosVenta);
-//                        }
-//                    }
-//                }
-                //Agregar vendedor
-                String sellToSearch = (String) vendCombo.getSelectedItem();
-                for (Vendedor vendedor : vendedores){
-                    String fullname = vendedor.getNames() + " " + vendedor.getSurnames();
-                    if (fullname.equalsIgnoreCase(sellToSearch)){
-                        venta.setVendedor(vendedor);
+                for (int i = 0; i < model3.size(); i++) {
+                    Object el = model3.getElementAt(i);
+                    if (model3.getElementAt(i) != null){
+                        Producto producto = (Producto) el;
+                        int id = producto.getProductId();
+                        productosVenta.add((long) id);
                     }
-                }
+                } venta.setProductos(productosVenta);
+
+                //Agregar vendedor
+              Vendedor vendedor = (Vendedor) vendCombo.getSelectedItem();
+              venta.setVendedor(vendedor);
                 int monto = Integer.parseInt(totaltxt.getText());
                 venta.setMonto(monto);
                 //Agregar fecha
