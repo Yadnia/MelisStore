@@ -203,7 +203,7 @@ public class Product extends JInternalFrame {
                 } else {
                     List<Producto> prods = getProducts();
                     for (Producto producto : prods) {
-                        if (producto.getCode().equalsIgnoreCase(code)) {
+                        if (producto.getDescription().equalsIgnoreCase(desc)) {
                             JOptionPane.showMessageDialog(null, "Ese producto ya existe.", "Error", JOptionPane.ERROR_MESSAGE);
                             validEntry = false;
                         }

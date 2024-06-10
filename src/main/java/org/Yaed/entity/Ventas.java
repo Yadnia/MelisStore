@@ -3,8 +3,10 @@ package org.Yaed.entity;
 import jakarta.persistence.*;
 
 import javax.crypto.Cipher;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -18,13 +20,9 @@ public class Ventas {
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    @ManyToMany
-    @JoinTable(
-            name = "Ventas_Productos",
-            joinColumns = @JoinColumn(name = "venta_id"),
-            inverseJoinColumns = @JoinColumn(name = "producto_id")
-    )
-    private Set<Producto> productos;
+    @ElementCollection
+    @Column(name = "producto_id")
+    private List<Long> productoIds;
 
     @Column(name = "monto")
     private float monto;
@@ -34,16 +32,16 @@ public class Ventas {
     private Vendedor vendedor;
 
     @Column(name = "fecha")
-    private LocalDateTime fecha;
+    private LocalDate fecha;
 
     // Default constructor
     public Ventas() {
     }
 
     // Parameterized constructor
-    public Ventas(Cliente cliente, Set<Producto> productos, float monto, Vendedor vendedor, LocalDateTime fecha) {
+    public Ventas(Cliente cliente, List<Long> productoIds, float monto, Vendedor vendedor, LocalDate fecha) {
         this.cliente = cliente;
-        this.productos = productos;
+        this.productoIds = productoIds;
         this.monto = monto;
         this.vendedor = vendedor;
         this.fecha = fecha;
@@ -66,12 +64,12 @@ public class Ventas {
         this.cliente = cliente;
     }
 
-    public Set<Producto> getProductos() {
-        return productos;
+    public List<Long> getProductos() {
+        return productoIds;
     }
 
-    public void setProductos(Set<Producto> productos) {
-        this.productos = productos;
+    public void setProductos(List<Long> productos) {
+        this.productoIds = productos;
     }
 
     public float getMonto() {
@@ -90,11 +88,11 @@ public class Ventas {
         this.vendedor = vendedor;
     }
 
-    public LocalDateTime getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(LocalDateTime fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 
@@ -103,7 +101,7 @@ public class Ventas {
         return "Ventas{" +
                 "id=" + id +
                 ", cliente=" + cliente +
-                ", productos=" + productos +
+                ", productos=" + productoIds +
                 ", monto=" + monto +
                 ", vendedor=" + vendedor +
                 ", fecha=" + fecha +

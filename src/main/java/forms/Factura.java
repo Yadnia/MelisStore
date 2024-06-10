@@ -13,6 +13,7 @@ import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,26 +21,26 @@ public class Factura extends JInternalFrame {
 
     static Factura myFactura;
 
-    private Factura(){
-        super("Factura", true, true, true,true);
+    private Factura() {
+        super("Factura", true, true, true, true);
         InicializarFac();
         myFactura = this;
 
     }
 
-    private void InicializarFac(){
+    private void InicializarFac() {
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize(new Dimension(750,550));
+        setSize(new Dimension(750, 550));
         setResizable(true);
         getContentPane().setBackground(new Color(46, 21, 59));
         setLayout(new BorderLayout());
         Font font14 = new Font("Outfit SemiBold", Font.BOLD, 14);
         Font font12 = new Font("Outfit SemiBold", Font.BOLD, 12);
         Font font16 = new Font("Outfit SemiBold", Font.BOLD, 16);
-        Font font20= new Font("Outfit SemiBold", Font.BOLD, 20);
-        Color yell = new Color(255,179,2);
+        Font font20 = new Font("Outfit SemiBold", Font.BOLD, 20);
+        Color yell = new Color(255, 179, 2);
         Color dk = new Color(46, 21, 59);
-        MatteBorder border = new MatteBorder(0,0,1,0,Color.WHITE);
+        MatteBorder border = new MatteBorder(0, 0, 1, 0, Color.WHITE);
 
 
         //PANEL
@@ -49,7 +50,7 @@ public class Factura extends JInternalFrame {
 
         //LABELS Y TEXTFIELDS
         JLabel Title = new JLabel("Facturar");
-        Title.setFont(font16);
+        Title.setFont(font20);
         Title.setForeground(yell);
         JLabel prod = new JLabel("Producto");
         prod.setFont(font14);
@@ -65,61 +66,106 @@ public class Factura extends JInternalFrame {
         totaltxt.setForeground(yell);
 
         //JCOOMBOBOX
-                  //PRODUCTOS
-        JComboBox<Producto> prodCombo = new JComboBox<>();
-        prodCombo.setPreferredSize(new Dimension(120,30));
+        //PRODUCTOS
+//        JComboBox<String> prodCombo = new JComboBox<>();
+//        prodCombo.setPreferredSize(new Dimension(120, 30));
+//        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+//        updProdCombo(model);
+//        prodCombo.setModel(model);
+
+        //
         List<Producto> productos = getProducts();
-        DefaultComboBoxModel<Producto> model = new DefaultComboBoxModel<>();
-        for (Producto producto : productos){
-            model.addElement(producto);
-        }prodCombo.setModel(model);
-                    //VENDEDORES
+        JComboBox<Producto> comboBox = new JComboBox<>();
+        comboBox.setPreferredSize(new Dimension(120, 30));
+        for (Producto producto : productos) {
+            comboBox.addItem(producto);
+        }
+
+        // Opcionalmente, puedes establecer un rendere personalizado para mostrar la descripción en el JComboBox
+        comboBox.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public java.awt.Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof Producto) {
+                    Producto producto = (Producto) value;
+                    setText(producto.getDescription());
+                }
+                return this;
+            }
+        });
+        //VENDEDORES
         JComboBox<Vendedor> vendCombo = new JComboBox<>();
-        vendCombo.setPreferredSize(new Dimension(120, 30));
         List<Vendedor> vendedores = getSellers();
-        DefaultComboBoxModel<Vendedor> model1 = new DefaultComboBoxModel<>();
+        vendCombo.setPreferredSize(new Dimension(120, 30));
         for (Vendedor vendedor : vendedores){
-            model1.addElement(vendedor);
-        }vendCombo.setModel(model1);
-                    //CLIENTES
+            vendCombo.addItem(vendedor);
+        }
+        vendCombo.setRenderer(new DefaultListCellRenderer(){
+            @Override
+            public java.awt.Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof Vendedor) {
+                    Vendedor vendedor = (Vendedor) value;
+                    setText(vendedor.getNames()+" "+vendedor.getSurnames());
+                }
+                return this;
+            }
+        });
+        //CLIENTES
         JComboBox<Cliente> clienteCombo = new JComboBox<>();
-        clienteCombo.setPreferredSize(new Dimension(120,30));
-        List <Cliente> clientes = getClients();
-        DefaultComboBoxModel<Cliente> model2 = new DefaultComboBoxModel<>();
+        clienteCombo.setPreferredSize(new Dimension(120, 30));
+        List<Cliente> clientes = getClients();
         for (Cliente cliente : clientes){
-            model2.addElement(cliente);
-        } clienteCombo.setModel(model2);
+            clienteCombo.addItem(cliente);
+        }
+        clienteCombo.setRenderer(new DefaultListCellRenderer(){
+            @Override
+            public java.awt.Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof Cliente) {
+                    Cliente cliente = (Cliente) value;
+                    setText(cliente.getNames()+" "+cliente.getSurnames());
+                }
+                return this;
+            }
+        });
 
         //BOTONES
         JButton create = new JButton("Agregar");
-        create.setPreferredSize(new Dimension(200,20));
+        create.setPreferredSize(new Dimension(200, 20));
         create.setFont(font14);
         create.setForeground(yell);
-        create.setBorder(new MatteBorder(1,1,1,1,Color.WHITE));
+        create.setBorder(new MatteBorder(1, 1, 1, 1, Color.WHITE));
         JButton delete = new JButton("Eliminar");
-        delete.setPreferredSize(new Dimension(200,20));
+        delete.setPreferredSize(new Dimension(200, 20));
         delete.setFont(font14);
         delete.setForeground(yell);
-        delete.setBorder(new MatteBorder(1,1,1,1,Color.WHITE));
+        delete.setBorder(new MatteBorder(1, 1, 1, 1, Color.WHITE));
         JButton off = new JButton("Descuento");
-        off.setPreferredSize(new Dimension(200,20));
+        off.setPreferredSize(new Dimension(200, 20));
         off.setFont(font14);
         off.setForeground(yell);
-        off.setBorder(new MatteBorder(1,1,1,1,Color.WHITE));
+        off.setBorder(new MatteBorder(1, 1, 1, 1, Color.WHITE));
         JButton fact = new JButton("Facturar");
-        fact.setPreferredSize(new Dimension(200,20));
+        fact.setPreferredSize(new Dimension(200, 20));
         fact.setFont(font14);
         fact.setForeground(yell);
-        fact.setBorder(new MatteBorder(1,1,1,1,Color.WHITE));
+        fact.setBorder(new MatteBorder(1, 1, 1, 1, Color.WHITE));
         JButton total = new JButton("Total");
         total.setFont(font14);
         total.setForeground(yell);
+        JButton refresh = new JButton("Refrescar");
+        refresh.setPreferredSize(new Dimension(50, 20));
+        refresh.setOpaque(false);
+        refresh.setFont(font14);
+        refresh.setForeground(yell);
+        refresh.setBorder(new MatteBorder(1, 1, 1, 1, Color.WHITE));
 
         //LISTA
-        DefaultListModel<String> model3 = new DefaultListModel<>();
-        JList<String> list = new JList<>(model3);
+        DefaultListModel<Producto> model3 = new DefaultListModel<>();
+        JList<Producto> list = new JList<>(model3);
         list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+        list.setLayoutOrientation(JList.VERTICAL);
         list.setVisibleRowCount(-1);
         JScrollPane scrollPane = new JScrollPane(list);
         //Cellrenderer
@@ -128,11 +174,7 @@ public class Factura extends JInternalFrame {
         create.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int selectedCombo = prodCombo.getSelectedIndex();
-                Producto prod = prodCombo.getItemAt(selectedCombo);
-                String descp = prod.getDescription();
-                int precio = prod.getPrecio();
-                String producto = descp+"- Precio: "+precio;
+                Producto producto = (Producto) comboBox.getSelectedItem();
                 model3.addElement(producto);
             }
         });
@@ -140,7 +182,7 @@ public class Factura extends JInternalFrame {
         delete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int selectedRow = prodCombo.getSelectedIndex();
+                int selectedRow = comboBox.getSelectedIndex();
                 model3.remove(selectedRow);
             }
         });
@@ -150,13 +192,15 @@ public class Factura extends JInternalFrame {
                 List<Integer> precios = new ArrayList<>();
                 // Itera sobre los elementos del modelo de lista
                 for (int i = 0; i < model3.size(); i++) {
-                    String elemento = model3.getElementAt(i);
-                    String[] partes = elemento.split("- Precio: ");
-                    int precio = Integer.parseInt(partes[1]);
-                    precios.add(precio);
+                    Object el = model3.getElementAt(i);
+                    if (model3.getElementAt(i) instanceof Producto){
+                        Producto producto = (Producto) el;
+                        int precio = producto.getPrecio();
+                        precios.add(precio);
+                    }
                 }
                 int total = 0;
-                for (Integer precio : precios){
+                for (Integer precio : precios) {
                     total += precio;
                 }
                 totaltxt.setText(String.valueOf(total));
@@ -167,20 +211,74 @@ public class Factura extends JInternalFrame {
             public void actionPerformed(ActionEvent e) {
                 String[] Descuentos = {"20%", "40%", "Cancelar"};
                 int resp = JOptionPane.showOptionDialog(null, "Aplicar descuento", "Descuento", 0, 3, null, Descuentos, null);
-                if (resp == 0){
+                if (resp == 0) {
                     int SubTotal = Integer.parseInt(totaltxt.getText());
-                    int desc = SubTotal * 20 /100;
+                    int desc = SubTotal * 20 / 100;
                     int total = SubTotal - desc;
                     totaltxt.setText(String.valueOf(total));
                 }
-                if (resp ==1){
+                if (resp == 1) {
                     int SubTotal = Integer.parseInt(totaltxt.getText());
-                    int desc = SubTotal * 40 /100;
+                    int desc = SubTotal * 40 / 100;
                     int total = SubTotal - desc;
                     totaltxt.setText(String.valueOf(total));
                 }
             }
         });
+
+        refresh.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               // updProdCombo(model);
+                //upVendCombo(model1);
+              //  upClCombo(model2);
+            }
+        });
+        fact.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List<Cliente> clientes = getClients();
+                List<Vendedor> vendedores = getSellers();
+                List<Producto> productos = getProducts();
+                List<Long> productosVenta = new ArrayList<>();
+                Ventas venta = new Ventas();
+                //Agregar cliente
+                String clientToSearch = (String) clienteCombo.getSelectedItem();
+                for (Cliente cliente : clientes){
+                 String fullname = cliente.getNames() + " " + cliente.getSurnames();
+                    if (fullname.equalsIgnoreCase(clientToSearch)){
+                        venta.setCliente(cliente);
+                    }
+                }
+//                //Agregar los productos
+//                for (int i = 0; i < model3.size(); i++){
+//                    String descBef = model3.get(i);
+//                    String [] parts = descBef.split("- Precio: ");
+//                    for (Producto producto: productos){
+//                        if (producto.getDescription().equalsIgnoreCase(parts[0])){
+//                            Long id = (long) producto.getProductId();
+//                            productosVenta.add(id);
+//                            venta.setProductos(productosVenta);
+//                        }
+//                    }
+//                }
+                //Agregar vendedor
+                String sellToSearch = (String) vendCombo.getSelectedItem();
+                for (Vendedor vendedor : vendedores){
+                    String fullname = vendedor.getNames() + " " + vendedor.getSurnames();
+                    if (fullname.equalsIgnoreCase(sellToSearch)){
+                        venta.setVendedor(vendedor);
+                    }
+                }
+                int monto = Integer.parseInt(totaltxt.getText());
+                venta.setMonto(monto);
+                //Agregar fecha
+                LocalDate fechaVenta = LocalDate.now();
+                venta.setFecha(fechaVenta);
+                saveVenta(venta);
+            }
+        });
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL; // Rellenar horizontalmente
         gbc.insets = new Insets(5, 5, 5, 5); // Márgenes alrededor de los componentes
@@ -205,7 +303,7 @@ public class Factura extends JInternalFrame {
         panel1.add(prod, gbc);
 
         gbc.gridx = 1;
-        panel1.add(prodCombo, gbc);
+        panel1.add(comboBox, gbc);
 
         gbc.gridx = 2;
         panel1.add(create, gbc);
@@ -254,32 +352,69 @@ public class Factura extends JInternalFrame {
         gbc.gridy = 9;
         panel1.add(fact, gbc);
 
+        gbc.gridx = 0;
+        panel1.add(refresh, gbc);
+
 // Añadir el panel al contenedor principal
         add(panel1, BorderLayout.CENTER);
 
 
+    }
 
+    public static Factura getInstancia() {
+        return null == myFactura ? (new Factura()) : myFactura;
     }
-    public static Factura getInstancia (){
-        return null == myFactura ? (new Factura()): myFactura;
-    }
+
     private static List<Producto> getProducts() {
         List<Producto> productos = new ArrayList<>();
         IGenericService<Producto> productService = new GenericServiceImpl<>(Producto.class, HibernateUtil.getSessionFactory());
         productos = productService.getAll();
         return productos;
     }
-    private static List<Vendedor> getSellers(){
-        List <Vendedor> vendedores = new ArrayList<>();
+
+    private static List<Vendedor> getSellers() {
+        List<Vendedor> vendedores = new ArrayList<>();
         IGenericService<Vendedor> sellService = new GenericServiceImpl<>(Vendedor.class, HibernateUtil.getSessionFactory());
         vendedores = sellService.getAll();
-        return  vendedores;
+        return vendedores;
     }
-    private static List<Cliente> getClients(){
+
+    private static List<Cliente> getClients() {
         List<Cliente> clientes = new ArrayList<>();
         IGenericService<Cliente> clientService = new GenericServiceImpl<>(Cliente.class, HibernateUtil.getSessionFactory());
         clientes = clientService.getAll();
         return clientes;
 
+    }
+
+    private static void updProdCombo(DefaultComboBoxModel<String> model) {
+        model.removeAllElements();
+        List<Producto> productos = getProducts();
+        for (Producto producto : productos) {
+            String selProd = producto.getDescription() + "- Precio: " + producto.getPrecio();
+            model.addElement(selProd);
+        }
+    }
+
+    private static void upVendCombo(DefaultComboBoxModel<String> model) {
+        model.removeAllElements();
+        List<Vendedor> vendedores = getSellers();
+        for (Vendedor vendedor : vendedores) {
+            String selVend = vendedor.getNames() + " " + vendedor.getSurnames();
+            model.addElement(selVend);
+        }
+    }
+
+    private static void upClCombo(DefaultComboBoxModel<String> model) {
+        model.removeAllElements();
+        List<Cliente> clientes = getClients();
+        for (Cliente cliente : clientes) {
+            String selCl = cliente.getNames() + " " + cliente.getSurnames();
+            model.addElement(selCl);
+        }
+    }
+    private static void saveVenta(Ventas venta) {
+        IGenericService<Ventas> productService = new GenericServiceImpl<>(Ventas.class, HibernateUtil.getSessionFactory());
+        productService.save(venta);
     }
 }

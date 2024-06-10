@@ -41,12 +41,6 @@ public class mainPage extends JFrame {
         JMenu searchMenu = new JMenu("Ayuda");
         this.getContentPane().add(desktopPane, BorderLayout.CENTER);
 
-        ActionListener ctFca = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showConfirmDialog(null, "Hacer Factura?");
-            }
-        };
         ActionListener outa = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -66,7 +60,6 @@ public class mainPage extends JFrame {
         createFac.setAccelerator(KeyStroke.getKeyStroke('F', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx(), false));
         createFac.setBackground(new Color(46, 21, 59));
         createFac.setForeground(Color.white);
-        createFac.addActionListener(ctFca);
 
         //-----------------------------------------------------
         //InternalFrame de crear una factura
@@ -166,6 +159,12 @@ sell.addActionListener(new ActionListener() {
         JMenuItem pdRrc = new JMenuItem("Ayuda");
         pdRrc.setBackground(new Color(46, 21, 59));
         pdRrc.setForeground(Color.white);
+        pdRrc.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new temporalVentas();
+            }
+        });
 
         //agregar al tercer menu
         search.add(cSrc);
