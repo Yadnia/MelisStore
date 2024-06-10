@@ -169,12 +169,14 @@ public class Factura extends JInternalFrame {
                 int resp = JOptionPane.showOptionDialog(null, "Aplicar descuento", "Descuento", 0, 3, null, Descuentos, null);
                 if (resp == 0){
                     int SubTotal = Integer.parseInt(totaltxt.getText());
-                    int total = SubTotal * 20 /100;
+                    int desc = SubTotal * 20 /100;
+                    int total = SubTotal - desc;
                     totaltxt.setText(String.valueOf(total));
                 }
                 if (resp ==1){
                     int SubTotal = Integer.parseInt(totaltxt.getText());
-                    int total = SubTotal * 40 /100;
+                    int desc = SubTotal * 40 /100;
+                    int total = SubTotal - desc;
                     totaltxt.setText(String.valueOf(total));
                 }
             }
