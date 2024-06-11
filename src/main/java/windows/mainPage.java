@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
 import java.net.URL;
+import org.Yaed.util.Reportes;
 
 public class mainPage extends JFrame {
 
@@ -55,6 +56,17 @@ public class mainPage extends JFrame {
             }
         };
 
+        ActionListener abrirUsuarios = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "Abrir");
+                try {
+                    Reportes.generarReporte("reportes/usuarios.jrxml");
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        };
         //agregar los menu item
         JMenuItem createFac = new JMenuItem("Crear Factura");
         createFac.setAccelerator(KeyStroke.getKeyStroke('F', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx(), false));
@@ -152,7 +164,8 @@ sell.addActionListener(new ActionListener() {
         secMenu.setPreferredSize(new Dimension(200, 30));
 
         JMenu search = new JMenu("Acerca de...");
-        JMenuItem cSrc = new JMenuItem("Ventas del dia");
+        JMenuItem cSrc = new JMenuItem("usuarios");
+        cSrc.addActionListener(abrirUsuarios);
         cSrc.setForeground(Color.white);
 //        cSrc.addActionListener(cliSr);
         cSrc.setBackground(new Color(46, 21, 59));
@@ -162,7 +175,13 @@ sell.addActionListener(new ActionListener() {
         pdRrc.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new temporalVentas();
+                JOptionPane.showMessageDialog(null, "Abrir");
+                try {
+                    Reportes.generarReporte("reportes/VentasMelis.jrxml");
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+
             }
         });
 

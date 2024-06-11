@@ -176,8 +176,8 @@ public class Admin extends JInternalFrame {
                 if (email.isEmpty() || password.isEmpty() || name.isEmpty() || lastN.isEmpty() || cd.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Por favor, rellene todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
                     validEntry = false;
-                } else if (!numeros(namTxt) || !numeros(apetxt)) {
-                    JOptionPane.showMessageDialog(null, "Solo se admiten numeros");
+                } else if (numeros(namTxt) || numeros(apetxt)) {
+                    JOptionPane.showMessageDialog(null, "Solo se admiten letras");
                     validEntry = false;
                 } else
                 {
