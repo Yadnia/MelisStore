@@ -172,6 +172,21 @@ sell.addActionListener(new ActionListener() {
         JMenuItem pdRrc = new JMenuItem("Ventas");
         pdRrc.setBackground(new Color(46, 21, 59));
         pdRrc.setForeground(Color.white);
+        JMenuItem clieRp = new JMenuItem("Clientes");
+        clieRp.setBackground(new Color(46, 21, 59));
+        clieRp.setForeground(Color.white);
+
+        clieRp.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "Abrir");
+                try {
+                    Reportes.generarReporte("reportes/Clientes.jrxml");
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
         pdRrc.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -188,6 +203,7 @@ sell.addActionListener(new ActionListener() {
         //agregar al tercer menu
         search.add(cSrc);
         search.add(pdRrc);
+        search.add(clieRp);
         search.setPreferredSize(new Dimension(250, 30));
 
         searchMenu.add(search);
